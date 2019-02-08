@@ -1,6 +1,6 @@
-package JavaOOP.shapes;
+package shapesPackage;
 
-import JavaOOP.shapes.classes.*;
+import shapesPackage.classes.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
