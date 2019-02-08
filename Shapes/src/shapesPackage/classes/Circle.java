@@ -1,4 +1,4 @@
-package JavaOOP.shapes.classes;
+package shapesPackage.classes;
 
 import java.lang.NullPointerException;
 
@@ -9,14 +9,17 @@ public class Circle implements Shape {
         this.radius = radius;
     }
 
+    @Override
     public double getWidth() {
         return radius * 2;
     }
-
+    
+    @Override
     public double getHeight() {
         return radius * 2;
     }
-
+    
+    @Override
     public double getArea() {
         try {
             return Math.PI * radius * radius;
@@ -25,7 +28,8 @@ public class Circle implements Shape {
             return 0;
         }
     }
-
+    
+    @Override
     public double getPerimeter() {
         try {
             return Math.PI * radius * 2;
@@ -42,14 +46,11 @@ public class Circle implements Shape {
 
     @Override
     public int hashCode() {
-        final int prime = 7;
-        int hash = 1;
-        hash = prime * hash + Double.hashCode(radius);
+        hash =  Double.hashCode(radius);
         return hash;
     }
     @Override
     public boolean equals(Object object) {
-        try {
             if (object == this) {
                 System.out.println(" true (This is the same object!)");
                 return true;
@@ -59,6 +60,7 @@ public class Circle implements Shape {
                 System.out.println("Classes of objects are different!");
                 return false;
             }
+        
             Circle circle = (Circle) object;
 
             if (this.radius == circle.radius) {
@@ -67,12 +69,7 @@ public class Circle implements Shape {
                 System.out.println("Parameters of objects are different!");
                 return false;
             }
-
-        } catch ( RuntimeException e ) {
-            e.getMessage();
-            return false;
-        }
-    }
+     }
 }
 
 
