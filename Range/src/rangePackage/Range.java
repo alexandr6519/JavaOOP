@@ -1,4 +1,4 @@
-package JavaOOP.range;
+package rangePackage;
 
 import java.util.Locale;
 import java.util.Scanner;
