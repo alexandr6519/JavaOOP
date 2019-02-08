@@ -1,4 +1,4 @@
-package shapesPackage;
+package ru.academits.ikonnkov.shapes;
 
 import shapesPackage.classes.*;
 
