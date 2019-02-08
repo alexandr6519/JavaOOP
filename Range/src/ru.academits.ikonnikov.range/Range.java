@@ -1,4 +1,4 @@
-package rangePackage;
+package ru.academits.ikonnkov.range;
 
 import java.util.Locale;
 import java.util.Scanner;
