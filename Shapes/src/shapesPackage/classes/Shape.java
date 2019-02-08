@@ -1,4 +1,4 @@
-package JavaOOP.shapes.classes;
+package shapesPackage.classes;
 
 public interface Shape {
     double getWidth();
