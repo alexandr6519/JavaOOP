@@ -1,4 +1,4 @@
-package JavaOOP.shapes.classes;
+package shapesPackage.classes;
 
 import java.lang.NullPointerException;
 
@@ -11,15 +11,17 @@ public class Rectangle implements Shape {
         this.sideWidth = sideWidth;
     }
 
-
+    @Override
     public double getWidth() {
         return sideWidth;
     }
-
+    
+    @Override
     public double getHeight() {
         return sideLength;
     }
-
+    
+    @Override
     public double getArea() {
         try {
             return getWidth() * getHeight();
@@ -28,7 +30,8 @@ public class Rectangle implements Shape {
             return 0;
         }
     }
-
+    
+    @Override
     public double getPerimeter() {
         try {
             return (sideLength + sideWidth) * 2;
@@ -54,7 +57,6 @@ public class Rectangle implements Shape {
 
     @Override
     public boolean equals(Object object) {
-        try {
             if (object == this) {
                 System.out.println(" true (This is the same object!)");
                 return true;
@@ -71,12 +73,7 @@ public class Rectangle implements Shape {
             } else {
                 System.out.println("Parameters of objects are different!");
                 return false;
-            }
-
-        } catch ( RuntimeException e ) {
-            e.getMessage();
-            return false;
-        }
+            }      
     }
 }
 
