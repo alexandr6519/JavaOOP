@@ -1,40 +1,32 @@
-package ru.academits.ikonnkov.shapes;
+package ru.academits.ikonnikov.shapes;
 
-import ru.academits.ikonnkov.shapes.classes.*;
-
+import ru.academits.ikonnikov.shapes.classes.*;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class MainShapes {
-    static class SortShapesByArea implements Comparator<Shape> {
-        public int compare(Shape shape1, Shape shape2) {
-            return (int) (shape2.getArea() - shape1.getArea());
-        }
-    }
-
     private static Shape getShapeMaxArea(Shape shape[]) {
-        try {
-            Arrays.sort(shape, new SortShapesByArea());
+        if (shape != null) {
+            Arrays.sort(shape, new SortShapesByAreaByComparator());
             return shape[0];
-        } catch ( NullPointerException e ) {
-            System.out.println("Массив фигур не должен быть пустым! " + e.getMessage());
+        } else {
+            System.out.println("Массив фигур не должен быть пустым!");
             return null;
-        }
-    }
-
-    static class SortShapesByPerimeter implements Comparator<Shape> {
-        public int compare(Shape shape1, Shape shape2) {
-            return (int) (shape2.getPerimeter() - shape1.getPerimeter());
         }
     }
 
     private static Shape getShapeSecondMaxPerimeter(Shape shape[]) {
-        try {
-            Arrays.sort(shape, new SortShapesByPerimeter());
+        if (shape != null)   {
+            Arrays.sort(shape, new SortShapesByPerimeterByComparator());
             return shape[1];
-        } catch ( NullPointerException e ) {
-            System.out.println("Массив фигур не должен быть пустым! " + e.getMessage());
+        } else {
+            System.out.println("Массив фигур не должен быть пустым!");
             return null;
+        }
+    }
+
+    private static void showShapesArray(Shape[] shape) {
+        for (Shape aShape : shape) {
+            System.out.println(aShape.toString());
         }
     }
 
@@ -63,49 +55,59 @@ public class MainShapes {
         shape[15] = new Circle(2.1);
         shape[16] = shape[0];
 
-        System.out.printf("Результат сравнения фигуры - %s  с фигурой %s  =   ", shape[2].toString(), shape[13].toString());
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[10].toString(), shape[11].toString());
+        System.out.println(shape[10].equals(shape[11]));
+        System.out.println();
+
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[3].toString(), shape[4].toString());
+        System.out.println(shape[3].equals(shape[4]));
+        System.out.println();
+
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[1].toString(), shape[2].toString());
+        System.out.println(shape[1].equals(shape[2]));
+        System.out.println();
+
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[2].toString(), shape[13].toString());
         System.out.println(shape[2].equals(shape[13]));
         System.out.println();
 
-        System.out.printf("Результат сравнения фигуры - - %s с фигурой %s  =   ", shape[8].toString(), shape[12].toString());
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[8].toString(), shape[12].toString());
         System.out.println(shape[12].equals(shape[8]));
         System.out.println();
 
-        System.out.printf("Результат сравнения фигуры - %s с фигурой %s  =   ", shape[4].toString(), shape[14].toString());
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[4].toString(), shape[14].toString());
         System.out.println(shape[14].equals(shape[4]));
         System.out.println();
 
-        System.out.printf("Результат сравнения фигуры %s с фигурой %s  =   ", shape[10].toString(), shape[15].toString());
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[10].toString(), shape[15].toString());
         System.out.println(shape[10].equals(shape[15]));
         System.out.println();
 
-        System.out.printf("Результат сравнения фигуры %s с фигурой %s  =   ", shape[0].toString(), shape[0].toString());
+        System.out.printf("Результат сравнения фигуры - %s %n с фигурой - %s  =  ", shape[0].toString(), shape[0].toString());
         System.out.println(shape[0].equals(shape[16]));
         System.out.println();
 
         Shape shapeMaxArea = getShapeMaxArea(shape);
+        System.out.println("Массив Фигур, отсортированный по убыванию значения площади: ");
+        showShapesArray(shape);
         System.out.println("Фигура с максимальным значением площади имеет следующие параметры: ");
         System.out.println(Arrays.toString(new Shape[]{shapeMaxArea}));
+        System.out.println();
 
         Shape shapeSecondMaxPerimeter = getShapeSecondMaxPerimeter(shape);
+        System.out.println("Массив Фигур, отсортированный по убыванию значения периметра: ");
+        showShapesArray(shape);
         System.out.println("Фигура со вторым по величине периметром имеет следующие параметры: ");
         System.out.println(Arrays.toString(new Shape[]{shapeSecondMaxPerimeter}));
-
-        System.out.println(Arrays.toString(shape));
-
-        System.out.printf("Результат сравнения фигуры - %s с фигурой %s  =  ", shape[10].toString(), shape[11].toString());
-        System.out.println(shape[10].equals(shape[11]));
-        System.out.println();
-        System.out.printf("Результат сравнения фигуры - %s с фигурой %s  =  ", shape[3].toString(), shape[4].toString());
-        System.out.println(shape[3].equals(shape[4]));
         System.out.println();
 
-        System.out.printf("Hashcode of shape:  %s =  %d  %n", shape[0].toString(), shape[0].hashCode());
-        System.out.printf("Hashcode of shape: %s =  %d  %n", shape[2].toString(), shape[2].hashCode());
-        System.out.printf("Hashcode of shape: %s =  %d  %n", shape[3].toString(), shape[3].hashCode());
-        System.out.printf("Hashcode of shape: %s =  %d  %n", shape[4].toString(), shape[4].hashCode());
-        System.out.printf("Hashcode of shape: %s =  %d  %n", shape[9].toString(), shape[9].hashCode());
-        System.out.printf("Hashcode of shape: %s =  %d  %n", shape[10].toString(), shape[10].hashCode());
-
+        System.out.printf("Hashcode of shape - %s =  %d  %n", shape[0].toString(), shape[0].hashCode());
+        System.out.printf("Hashcode of shape - %s =  %d  %n", shape[2].toString(), shape[2].hashCode());
+        System.out.printf("Hashcode of shape - %s =  %d  %n", shape[3].toString(), shape[3].hashCode());
+        System.out.printf("Hashcode of shape - %s =  %d  %n", shape[4].toString(), shape[4].hashCode());
+        System.out.printf("Hashcode of shape - %s =  %d  %n", shape[9].toString(), shape[9].hashCode());
+        System.out.printf("Hashcode of shape - %s =  %d  %n", shape[10].toString(), shape[10].hashCode());
     }
+
+
 }
