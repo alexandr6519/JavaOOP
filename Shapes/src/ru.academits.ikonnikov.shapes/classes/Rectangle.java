@@ -1,6 +1,4 @@
-package shapesPackage.classes;
-
-import java.lang.NullPointerException;
+package ru.academits.ikonnikov.shapes.classes;
 
 public class Rectangle implements Shape {
     private double sideLength;
@@ -15,35 +13,25 @@ public class Rectangle implements Shape {
     public double getWidth() {
         return sideWidth;
     }
-    
+
     @Override
     public double getHeight() {
         return sideLength;
     }
-    
+
     @Override
     public double getArea() {
-        try {
-            return getWidth() * getHeight();
-        } catch ( NullPointerException e ) {
-            System.out.println("Множество фигур не должно быть пустым! ");
-            return 0;
-        }
+        return getWidth() * getHeight();
     }
-    
+
     @Override
     public double getPerimeter() {
-        try {
-            return (sideLength + sideWidth) * 2;
-        } catch ( NullPointerException e ) {
-            System.out.println("Множество фигур не должно быть пустым! ");
-            return 0;
-        }
+        return (sideLength + sideWidth) * 2;
     }
 
     @Override
     public String toString() {
-        return String.format("class: Rectangle; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f, %n", getWidth(), getHeight(), getArea(), getPerimeter());
+        return String.format("class: Rectangle; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f", getWidth(), getHeight(), getArea(), getPerimeter());
     }
 
     @Override
@@ -57,23 +45,16 @@ public class Rectangle implements Shape {
 
     @Override
     public boolean equals(Object object) {
-            if (object == this) {
-                System.out.println(" true (This is the same object!)");
-                return true;
-            }
+        if (object == this) {
+            return true;
+        }
 
-            if (object.getClass() != this.getClass()) {
-                System.out.println("Classes of objects are different!");
-                return false;
-            }
-            Rectangle rectangle = (Rectangle) object;
+        if (object.getClass() != this.getClass()) {
+            return false;
+        }
 
-            if (this.sideLength == rectangle.sideLength && this.sideWidth == rectangle.sideWidth) {
-                return true;
-            } else {
-                System.out.println("Parameters of objects are different!");
-                return false;
-            }      
+        Rectangle rectangle = (Rectangle) object;
+
+        return (this.sideLength == rectangle.sideLength && this.sideWidth == rectangle.sideWidth);
     }
 }
-

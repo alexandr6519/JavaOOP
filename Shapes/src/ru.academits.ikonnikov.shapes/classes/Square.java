@@ -1,4 +1,4 @@
-package shapesPackage.classes;
+package ru.academits.ikonnikov.shapes.classes;
 
 public class Square implements Shape {
     private double sideLength;
@@ -12,47 +12,48 @@ public class Square implements Shape {
     public double getWidth() {
         return sideLength;
     }
-    
+
     @Override
     public double getHeight() {
         return sideLength;
     }
-    
+
     @Override
-    public double getArea() {     
+    public double getArea() {
         return sideLength * sideLength;
-        
     }
 
     @Override
-    public double getPerimeter() {       
-        return  sideLength * 4;
-        
+    public double getPerimeter() {
+        return sideLength * 4;
     }
 
     @Override
     public String toString() {
-        return String.format("class: Square; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f, %n", getWidth(), getHeight(), getArea(), getPerimeter());
+        return String.format("class: Square; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f", getWidth(), getHeight(), getArea(), getPerimeter());
     }
 
     @Override
-    public int hashCode() {        
+    public int hashCode() {
         return Double.hashCode(sideLength);
     }
-    
+
     @Override
     public boolean equals(Object object) {
-            if (object == this) {
-                return true;
-            }
+        if (object == this) {
+            return true;
+        }
 
-            if (object.getClass() != this.getClass()) {
-                return false;
-            }
+        if (object.getClass() != this.getClass()) {
+            return false;
+        }
 
-            Square square = (Square) object;
+        Square square = (Square) object;
 
-            return (this.sideLength == square.sideLength)
+        return this.sideLength == square.sideLength;
     }
 }
+
+
+
 
