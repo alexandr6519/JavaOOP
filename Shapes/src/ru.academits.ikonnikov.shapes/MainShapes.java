@@ -5,7 +5,7 @@ import shapesPackage.classes.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class Main {
+public class MainShapes {
     static class SortShapesByArea implements Comparator<Shape> {
         public int compare(Shape shape1, Shape shape2) {
             return (int) (shape2.getArea() - shape1.getArea());
