@@ -1,6 +1,4 @@
-package shapesPackage.classes;
-
-import java.lang.NullPointerException;
+package ru.academits.shapes.classes;
 
 public class Circle implements Shape {
     private double radius;
