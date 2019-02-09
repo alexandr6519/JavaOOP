@@ -1,6 +1,6 @@
 package ru.academits.ikonnkov.shapes;
 
-import shapesPackage.classes.*;
+import ru.academits.ikonnkov.shapes.classes.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
