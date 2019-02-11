@@ -1,112 +1,91 @@
 package ru.academits.ikonnikov.range;
 
+import java.lang.IllegalArgumentException;
+
 public class Range {
-    private double pointStart;
-    private double pointEnd;
-    private final double EPSILON = 1.0e-10;
+    private double from;
+    private double to;
 
-    Range(double pointStart, double pointEnd) {
-        if (pointStart - pointEnd > EPSILON) {
-            System.out.println("Значение конечной точки не должно быть меньше значения начальной!!!");
+    public Range(double from, double to) {
+        if (from > to) {
+            throw new IllegalArgumentException("Значение конечной точки не должно быть меньше значения начальной!!!");
         } else {
-            this.pointStart = pointStart;
-            this.pointEnd = pointEnd;
+            this.from = from;
+            this.to = to;
         }
     }
 
-    double getPointStart() {
-        return pointStart;
+    public double getFrom() {
+        return from;
     }
 
-    void setPointStart(double pointStart) {
-        this.pointStart = pointStart;
+    public void setFrom(double from) {
+        this.from = from;
     }
 
-    double getPointEnd() {
-        return pointEnd;
+    public double getTo() {
+        return to;
     }
 
-    void setPointEnd(double pointEnd) {
-        this.pointEnd = pointEnd;
+    public void setTo(double to) {
+        this.to = to;
     }
 
-    double getLength() {
-        if (this.pointEnd - this.pointStart < EPSILON) {
-            return 0;
+    public double getLength() {
+        if (this.to < this.from) {
+            throw new IllegalArgumentException("Значение конечной точки не должно быть меньше значения начальной!!!");
         }
-        return this.pointEnd - this.pointStart;
+        return this.to - this.from;
     }
 
-    boolean isInside(double pointChecked) {
-        return pointChecked >= this.pointStart && pointChecked <= this.pointEnd;
+    public boolean isInside(double pointChecked) {
+        return pointChecked >= this.from && pointChecked <= this.to;
     }
 
-    boolean checkPointsRange() {
-        if (pointStart - pointEnd > EPSILON) {
-            System.out.println("Значение конечной точки не должно быть меньше значения начальной!!! Введите значения снова!");
-            return true;
-        }
-
-        return false;
+    public boolean checkPoints() {
+        return (from > to);
     }
 
-    Range getIntersectionRanges(Range range) {
-        if (Math.abs(this.pointStart - range.pointStart) < EPSILON && Math.abs(this.pointEnd - range.pointEnd) < EPSILON) {
+    public Range getIntersection(Range range) {
+        if (Math.abs(this.from - range.from) < 0 && Math.abs(this.to - range.to) < 0) {
             return range;
         }
-        if ((Math.max(this.pointStart, range.pointStart) - Math.min(this.pointEnd, range.pointEnd) >= EPSILON)) {
+
+        if (Math.max(this.from, range.from) >= Math.min(this.to, range.to)) {
             return null;
         }
-        return new Range(Math.max(this.pointStart, range.pointStart), Math.min(this.pointEnd, range.pointEnd));
+        return new Range(Math.max(this.from, range.from), Math.min(this.to, range.to));
     }
 
-    Range[] getUnionRanges(Range range) {
-        if (Math.max(this.pointStart, range.pointStart) - Math.min(this.pointEnd, range.pointEnd) > EPSILON) {
-            Range[] ranges = new Range[2];
-            ranges[0] = this;
-            ranges[1] = range;
-            return ranges;
+    public Range[] getUnion(Range range) {
+        if (Math.max(this.from, range.from) > Math.min(this.to, range.to)) {
+            return new Range[]{this, range};
         } else {
-            Range[] ranges = new Range[1];
-            ranges[0] = new Range(Math.min(this.pointStart, range.pointStart), Math.max(this.pointEnd, range.pointEnd));
-            return ranges;
+            return new Range[]{new Range(Math.min(this.from, range.from), Math.max(this.to, range.to))};
         }
     }
 
-    Range[] getDifferenceRanges(Range range) {
-        if (Math.max(this.pointStart, range.pointStart) - Math.min(this.pointEnd, range.pointEnd) >= EPSILON) {
-            Range ranges[] = new Range[1];
-            ranges[0] = this;
-            return ranges;
+    public Range[] getDifference(Range range) {
+        if (Math.max(this.from, range.from) >= Math.min(this.to, range.to)) {
+            return new Range[]{this};
         }
 
-        if ((range.pointStart - this.pointStart) > EPSILON) {
-            if ((this.pointEnd - range.pointEnd) > EPSILON){
-                Range ranges[] = new Range[2];
-                ranges[0] = new Range(this.pointStart, range.pointStart);
-                ranges[1] = new Range(range.pointEnd, this.pointEnd);
-                return ranges;
+        if (range.from > this.from) {
+            if (this.to > range.to) {
+                return new Range[]{new Range(this.from, range.from), new Range(range.to, this.to)};
             } else {
-                Range ranges[] = new Range[1];
-                ranges[0] = new Range(this.pointStart, range.pointStart);
-                return ranges;
+                return new Range[]{new Range(this.from, range.from)};
             }
-        } else  if ((this.pointEnd - range.pointEnd) > EPSILON){
-            Range ranges[] = new Range[1];
-            ranges[0] = new Range(range.pointEnd, this.pointEnd);
-            return ranges;
+        } else if (this.to > range.to) {
+            return new Range[]{new Range(range.to, this.to)};
         } else {
-            return null;
+            return new Range[0];
         }
     }
 
     @Override
     public String toString() {
-        return String.format("[%.2f ; %.2f]", this.pointStart, this.pointEnd);
+        return String.format("[%.2f ; %.2f]", this.from, this.to);
     }
 }
-
-
-
-
 
