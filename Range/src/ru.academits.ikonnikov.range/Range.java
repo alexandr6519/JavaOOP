@@ -9,10 +9,10 @@ public class Range {
     public Range(double from, double to) {
         if (from > to) {
             throw new IllegalArgumentException("Значение конечной точки не должно быть меньше значения начальной!!!");
-        } else {
-            this.from = from;
-            this.to = to;
         }
+
+        this.from = from;
+        this.to = to;
     }
 
     public double getFrom() {
@@ -20,6 +20,10 @@ public class Range {
     }
 
     public void setFrom(double from) {
+        if (from > this.to) {
+            throw new IllegalArgumentException("Значение конечной точки не должно быть меньше значения начальной!!!");
+        }
+
         this.from = from;
     }
 
@@ -28,13 +32,14 @@ public class Range {
     }
 
     public void setTo(double to) {
+        if (this.from > to) {
+            throw new IllegalArgumentException("Значение конечной точки не должно быть меньше значения начальной!!!");
+        }
+
         this.to = to;
     }
 
     public double getLength() {
-        if (this.to < this.from) {
-            throw new IllegalArgumentException("Значение конечной точки не должно быть меньше значения начальной!!!");
-        }
         return this.to - this.from;
     }
 
@@ -47,19 +52,16 @@ public class Range {
     }
 
     public Range getIntersection(Range range) {
-        if (Math.abs(this.from - range.from) < 0 && Math.abs(this.to - range.to) < 0) {
-            return range;
-        }
-
         if (Math.max(this.from, range.from) >= Math.min(this.to, range.to)) {
             return null;
         }
+
         return new Range(Math.max(this.from, range.from), Math.min(this.to, range.to));
     }
 
     public Range[] getUnion(Range range) {
         if (Math.max(this.from, range.from) > Math.min(this.to, range.to)) {
-            return new Range[]{this, range};
+            return new Range[]{new Range(this.from, this.to), new Range(range.from, range.to)};
         } else {
             return new Range[]{new Range(Math.min(this.from, range.from), Math.max(this.to, range.to))};
         }
@@ -67,7 +69,7 @@ public class Range {
 
     public Range[] getDifference(Range range) {
         if (Math.max(this.from, range.from) >= Math.min(this.to, range.to)) {
-            return new Range[]{this};
+            return new Range[]{new Range(this.from, this.to)};
         }
 
         if (range.from > this.from) {
@@ -88,4 +90,8 @@ public class Range {
         return String.format("[%.2f ; %.2f]", this.from, this.to);
     }
 }
+
+
+
+
 
