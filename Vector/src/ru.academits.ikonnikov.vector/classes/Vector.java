@@ -11,6 +11,7 @@ public class Vector {
         if (n < 1) {
             throw new IllegalArgumentException("The parameter 'n' must be > 0!");
         }
+
         this.n = n;
         this.array = new double[n];
 
@@ -62,7 +63,7 @@ public class Vector {
     }
 
     public Vector add(Vector vector) {
-        if (this.n < 1 || vector.n < 1) {
+        if (vector.n < 1) {
             throw new IllegalArgumentException("The parameter 'n' must be > 0!");
         }
 
@@ -91,7 +92,7 @@ public class Vector {
     }
 
     public Vector subtract(Vector vector) {
-        if (this.n < 1 || vector.n < 1) {
+        if (vector.n < 1) {
             throw new IllegalArgumentException("The parameter 'n' must be > 0!");
         }
 
@@ -120,9 +121,6 @@ public class Vector {
     }
 
     public Vector multiplyByScalar(double scalar) {
-        if (this.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
-        }
         Vector resultVector = new Vector(this.n);
 
         for (int i = 0; i < this.n; i++) {
@@ -137,9 +135,6 @@ public class Vector {
     }
 
     public Vector turn() {
-        if (this.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
-        }
         Vector resultVector = new Vector(this.n);
 
         for (int i = 0; i < this.n; i++) {
@@ -153,9 +148,6 @@ public class Vector {
     }
 
     public double getLength() {
-        if (this.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
-        }
         double sum = 0;
 
         for (int i = 0; i < this.n; i++) {
@@ -165,13 +157,16 @@ public class Vector {
     }
 
     public double getComponent(int i) {
-        if (this.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
+        if (i < 0 || i >= this.array.length) {
+            throw new IllegalArgumentException("The index of array isn't correct!");
         }
         return this.array[i];
     }
 
     public void setComponent(int i, double component) {
+        if (i < 0 || i >= this.array.length) {
+            throw new IllegalArgumentException("The index of array isn't correct!");
+        }
         this.array[i] = component;
     }
 
@@ -207,7 +202,7 @@ public class Vector {
 
     public static Vector subtract(Vector vector1, Vector vector2) {
         if (vector1.n < 1 || vector2.n < 1) {
-            throw new IllegalArgumentException("The parameters 'n' must be > 0!");
+            throw new IllegalArgumentException("The length of vectors must be > 0!");
         }
 
         int m = vector1.array.length;
@@ -237,7 +232,7 @@ public class Vector {
 
     public static double multiplyScalar(Vector vector1, Vector vector2) {
         if (vector1.n < 1 || vector2.n < 1) {
-            throw new IllegalArgumentException("The parameters 'n' must be > 0!");
+            throw new IllegalArgumentException("The length of vectors must be > 0!");
         }
 
         int m = vector1.array.length;
@@ -253,9 +248,6 @@ public class Vector {
 
     @Override
     public String toString() {
-        if (this.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
-        }
         String result = "{";
         for (int i = 0; i < this.n - 1; i++) {
             String str = String.format(" %.2f ;", this.array[i]);
@@ -290,9 +282,6 @@ public class Vector {
 
     @Override
     public int hashCode() {
-        if (this.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
-        }
         final int prime = 13;
         int hash = 1;
 
