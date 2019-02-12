@@ -10,7 +10,7 @@ public class MainRange {
         Scanner scanner = new Scanner(System.in);
         scanner.useLocale(Locale.US);
 
-        Range range1 = new Range(0.0, 0.0);
+        Range range1 = new Range(-100000000.0, 100000000.0);
 
         do {
             System.out.println("Введите значение начальной точки первого отрезка: ");
@@ -36,7 +36,7 @@ public class MainRange {
             System.out.printf("Точка (%.2f) НЕ принадлежит отрезку [%.2f ; %.2f] %n ", pointChecked, range1.getFrom(), range1.getTo());
         }
 
-        Range range2 = new Range(0.0, 0.0);
+        Range range2 = new Range(-100000000.0, 100000000.0);
         do {
             System.out.println("Введите значение начальной точки второго отрезка: ");
             range2.setFrom(scanner.nextDouble());
