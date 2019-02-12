@@ -22,7 +22,7 @@ public class Vector {
 
     public Vector(Vector vector) {
         if (vector.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
+            throw new IllegalArgumentException("The length of vector must be > 0!");
         }
 
         this.n = vector.n;
@@ -64,7 +64,7 @@ public class Vector {
 
     public Vector add(Vector vector) {
         if (vector.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
+            throw new IllegalArgumentException("The length of vector must be > 0!");
         }
 
         int m = vector.array.length;
@@ -93,7 +93,7 @@ public class Vector {
 
     public Vector subtract(Vector vector) {
         if (vector.n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
+            throw new IllegalArgumentException("The length of vector must be > 0!");
         }
 
         int m = vector.array.length;
@@ -172,7 +172,7 @@ public class Vector {
 
     public static Vector add(Vector vector1, Vector vector2) {
         if (vector1.n < 1 || vector2.n < 1) {
-            throw new IllegalArgumentException("The parameters 'n' must be > 0!");
+            throw new IllegalArgumentException("The length of vectors must be > 0!");
         }
 
         int m = vector1.array.length;
