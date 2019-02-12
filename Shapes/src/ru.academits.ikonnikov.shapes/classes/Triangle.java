@@ -17,14 +17,18 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
+    private double getLength(double a, double b, double c) {
+        return (Math.max(Math.max(a, b), c) - Math.min(Math.min(a, b), c));
+    }
+
     @Override
     public double getWidth() {
-        return (Math.max(Math.max(x1, x2), x3) - Math.min(Math.min(x1, x2), x3));
+        return getLength(x1, x2, x3);
     }
 
     @Override
     public double getHeight() {
-        return (Math.max(Math.max(y1, y2), y3) - Math.min(Math.min(y1, y2), y3));
+        return getLength(y1, y2, y3);
     }
 
     @Override
@@ -40,7 +44,8 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        return String.format("class: Triangle; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f", getWidth(), getHeight(), getArea(), getPerimeter());
+        return String.format("class: Triangle; x1: %.2f, y1: %.2f, x2: %.2f, y2: %.2f, x3: %.2f, y3: %.2f, Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f",
+                this.x1, this.y1, this.x2, this.y2, this.x3, this.y3, getWidth(), getHeight(), getArea(), getPerimeter());
     }
 
     @Override

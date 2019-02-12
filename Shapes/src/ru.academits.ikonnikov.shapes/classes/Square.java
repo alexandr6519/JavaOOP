@@ -4,7 +4,6 @@ public class Square implements Shape {
     private double sideLength;
 
     public Square(double sideLength) {
-
         this.sideLength = sideLength;
     }
 
@@ -30,7 +29,8 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return String.format("class: Square; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f", getWidth(), getHeight(), getArea(), getPerimeter());
+        return String.format("class: Square; sideLength: %.2f, Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f",
+                this.sideLength, getWidth(), getHeight(), getArea(), getPerimeter());
     }
 
     @Override

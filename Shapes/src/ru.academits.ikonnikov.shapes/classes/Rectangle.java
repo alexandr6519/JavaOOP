@@ -31,7 +31,8 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return String.format("class: Rectangle; Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f", getWidth(), getHeight(), getArea(), getPerimeter());
+        return String.format("class: Rectangle; sideLength: %.2f, sideWidth %.2f, Width: %.2f, Height: %.2f, Area: %.2f, Perimeter: %.2f",
+                this.sideLength, this.sideWidth, getWidth(), getHeight(), getArea(), getPerimeter());
     }
 
     @Override
