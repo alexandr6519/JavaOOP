@@ -17,7 +17,7 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
-    private static double getHeightLength(double a, double b, double c) {
+    private static double getLength(double a, double b, double c) {
         return (Math.max(Math.max(a, b), c) - Math.min(Math.min(a, b), c));
     }
 
@@ -27,12 +27,12 @@ public class Triangle implements Shape {
 
     @Override
     public double getWidth() {
-        return getHeightLength(x1, x2, x3);
+        return getLength(x1, x2, x3);
     }
 
     @Override
     public double getHeight() {
-        return getHeightLength(y1, y2, y3);
+        return getLength(y1, y2, y3);
     }
 
     @Override
