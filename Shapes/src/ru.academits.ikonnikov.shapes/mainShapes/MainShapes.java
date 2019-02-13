@@ -1,6 +1,7 @@
 package ru.academits.ikonnikov.shapes.mainShapes;
 
 import ru.academits.ikonnikov.shapes.classes.*;
+
 import java.util.Arrays;
 import java.lang.NullPointerException;
 
@@ -9,12 +10,20 @@ public class MainShapes {
         if (shape == null) {
             throw new NullPointerException("Массив фигур не должен быть пустым!");
         }
-   
+
+        Arrays.sort(shape, new SortShapesByAreaByComparator());
+        return shape[0];
+    }
+
     private static Shape getShapeSecondMaxPerimeter(Shape[] shape) {
         if (shape == null) {
             throw new NullPointerException("Массив фигур не должен быть пустым!");
         }
-    
+
+        Arrays.sort(shape, new SortShapesByPerimeterByComparator());
+        return shape[1];
+    }
+
     private static void showShapesArray(Shape[] shapes) {
         for (Shape shape : shapes) {
             System.out.println(shape.toString());
@@ -99,5 +108,6 @@ public class MainShapes {
         System.out.printf("Hashcode of shape - %s =  %d  %n", shape[9].toString(), shape[9].hashCode());
         System.out.printf("Hashcode of shape - %s =  %d  %n", shape[10].toString(), shape[10].hashCode());
     }
-}
 
+
+}
