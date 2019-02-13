@@ -6,23 +6,15 @@ import java.lang.NullPointerException;
 
 public class MainShapes {
     private static Shape getShapeMaxArea(Shape[] shape) {
-        if (shape != null) {
-            Arrays.sort(shape, new SortShapesByAreaByComparator());
-            return shape[0];
-        } else {
+        if (shape == null) {
             throw new NullPointerException("Массив фигур не должен быть пустым!");
         }
-    }
-
+   
     private static Shape getShapeSecondMaxPerimeter(Shape[] shape) {
-        if (shape != null) {
-            Arrays.sort(shape, new SortShapesByPerimeterByComparator());
-            return shape[1];
-        } else {
+        if (shape == null) {
             throw new NullPointerException("Массив фигур не должен быть пустым!");
         }
-    }
-
+    
     private static void showShapesArray(Shape[] shapes) {
         for (Shape shape : shapes) {
             System.out.println(shape.toString());
