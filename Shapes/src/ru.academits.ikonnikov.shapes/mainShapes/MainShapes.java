@@ -108,6 +108,4 @@ public class MainShapes {
         System.out.printf("Hashcode of shape - %s =  %d  %n", shape[9].toString(), shape[9].hashCode());
         System.out.printf("Hashcode of shape - %s =  %d  %n", shape[10].toString(), shape[10].hashCode());
     }
-
-
 }
