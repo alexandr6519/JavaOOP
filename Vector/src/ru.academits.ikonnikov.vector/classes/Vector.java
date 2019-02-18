@@ -2,74 +2,79 @@ package ru.academits.ikonnikov.vector.classes;
 
 import java.lang.IllegalArgumentException;
 import java.lang.IndexOutOfBoundsException;
+import java.util.Arrays;
 
 public class Vector {
-    public double[] arrayDoubles;
+    public double[] vectorArray;
 
-    public Vector(int n) {
-        if (n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
+    public Vector(int vectorSize) {
+        if (vectorSize < 1) {
+            throw new IllegalArgumentException("The parameter 'vectorSize' must be > 0!");
         }
 
-        this.arrayDoubles = new double[n];
+        this.vectorArray = new double[vectorSize];
     }
 
     public Vector(Vector vector) {
-        int n = vector.arrayDoubles.length;
-        this.arrayDoubles = new double[n];
-        System.arraycopy(vector.arrayDoubles, 0, this.arrayDoubles, 0, n);
+        int vectorSize = vector.vectorArray.length;
+        this.vectorArray = Arrays.copyOf(vector.vectorArray, vectorSize);
     }
 
-    public Vector(double[] arrayDoubles) {
-        int n = arrayDoubles.length;
-        this.arrayDoubles = new double[n];
-        System.arraycopy(arrayDoubles, 0, this.arrayDoubles, 0, n);
-    }
+    public Vector(double[] array) {
+        int arrayLength = array.length;
 
-    public Vector(int n, double[] arrayDoubles) {
-        if (n < 1) {
-            throw new IllegalArgumentException("The parameter 'n' must be > 0!");
+        if (arrayLength == 0) {
+            throw new IllegalArgumentException("The length of array must be > 0!");
         }
 
-        this.arrayDoubles = new double[n];
-        int minSize = Math.min(n, arrayDoubles.length);
-        System.arraycopy(arrayDoubles, 0, this.arrayDoubles, 0, minSize);
+        this.vectorArray = Arrays.copyOf(array, arrayLength);
+    }
+
+    public Vector(int vectorSize, double[] array) {
+        if (vectorSize < 1) {
+            throw new IllegalArgumentException("The parameter 'vectorSize' must be > 0!");
+        }
+
+        this.vectorArray = Arrays.copyOf(array, vectorSize);;
     }
 
     public int getSize() {
-        return this.arrayDoubles.length;
+        return this.vectorArray.length;
     }
 
     public Vector add(Vector vector) {
-        int m = vector.arrayDoubles.length;
-        int n = this.arrayDoubles.length;
-        int minSize = Math.min(n, m);
-        int maxSize = Math.max(n, m);
-
-        Vector v = new Vector(maxSize, this.arrayDoubles );
-
-        for (int i = 0; i < minSize; i++) {
-            v.arrayDoubles[i] = this.arrayDoubles[i] + vector.arrayDoubles[i];
-        }
+        int m = vector.vectorArray.length;
+        int n = this.vectorArray.length;
 
         if (m >= n) {
-            System.arraycopy(vector.arrayDoubles, n, v.arrayDoubles, n, m - n);
+            this.vectorArray = Arrays.copyOf(this.vectorArray, m);
         }
 
-        this.arrayDoubles = new double[maxSize];
-        System.arraycopy(v.arrayDoubles, 0, this.arrayDoubles, 0, maxSize);
+        for (int i = 0; i < m; i++) {
+            this.vectorArray[i] += vector.vectorArray[i];
+        }
 
         return this;
     }
 
     public Vector subtract(Vector vector) {
-        Vector vector1 = new Vector(vector);
-        return this.add(vector1.turn());
+        int m = vector.vectorArray.length;
+        int n = this.vectorArray.length;
+
+        if (m >= n) {
+            this.vectorArray = Arrays.copyOf(this.vectorArray, m);
+        }
+
+        for (int i = 0; i < m; i++) {
+            this.vectorArray[i] -= vector.vectorArray[i];
+        }
+
+        return this;
     }
 
     public Vector multiplyByScalar(double scalar) {
-        for (int i = 0; i < this.arrayDoubles.length; i++) {
-            this.arrayDoubles[i] = this.arrayDoubles[i] * scalar;
+        for (int i = 0; i < this.vectorArray.length; i++) {
+            this.vectorArray[i] *= scalar;
         }
         return this;
     }
@@ -81,24 +86,24 @@ public class Vector {
     public double getLength() {
         double sum = 0;
 
-        for (double itemArrayDouble : this.arrayDoubles) {
-            sum += itemArrayDouble * itemArrayDouble;
+        for (double item : this.vectorArray) {
+            sum += item * item;
         }
         return Math.sqrt(sum);
     }
 
-    public double getComponent(int i) {
-        if (i < 0 || i >= this.arrayDoubles.length) {
+    public double getComponent(int index) {
+        if (index < 0 || index >= this.vectorArray.length) {
             throw new IndexOutOfBoundsException("The index of array isn't correct!");
         }
-        return this.arrayDoubles[i];
+        return this.vectorArray[index];
     }
 
-    public void setComponent(int i, double arrayComponent) {
-        if (i < 0 || i >= this.arrayDoubles.length) {
+    public void setComponent(int index, double arrayComponent) {
+        if (index < 0 || index >= this.vectorArray.length) {
             throw new IndexOutOfBoundsException("The index of array isn't correct!");
         }
-        this.arrayDoubles[i] = arrayComponent;
+        this.vectorArray[index] = arrayComponent;
     }
 
     public static Vector add(Vector vector1, Vector vector2) {
@@ -108,30 +113,29 @@ public class Vector {
 
     public static Vector subtract(Vector vector1, Vector vector2) {
         Vector vector3 = new Vector(vector1);
-        Vector vector4 = new Vector(vector2);
-        return vector3.subtract(vector4);
+        return vector3.subtract(vector2);
     }
 
     public static double multiplyScalar(Vector vector1, Vector vector2) {
-        int minSize = Math.min(vector1.arrayDoubles.length, vector2.arrayDoubles.length);
+        int minSize = Math.min(vector1.vectorArray.length, vector2.vectorArray.length);
         double result = 0;
 
         for (int i = 0; i < minSize; i++) {
-            result += vector1.arrayDoubles[i] * vector2.arrayDoubles[i];
+            result += vector1.vectorArray[i] * vector2.vectorArray[i];
         }
         return result;
     }
 
     @Override
     public String toString() {
-        int n = this.arrayDoubles.length;
+        int arrayLength = this.vectorArray.length;
         StringBuilder result = new StringBuilder("{");
 
-        for (int i = 0; i < n - 1; i++) {
-            String str = String.format(" %.2f ;", this.arrayDoubles[i]);
+        for (int i = 0; i < arrayLength - 1; i++) {
+            String str = String.format(" %.2f ,", this.vectorArray[i]);
             result = result.append(str);
         }
-        return result.append(String.format(" %.2f }", this.arrayDoubles[n - 1])).toString();
+        return result.append(String.format(" %.2f }", this.vectorArray[arrayLength - 1])).toString();
     }
 
     @Override
@@ -145,14 +149,14 @@ public class Vector {
         }
 
         Vector vector = (Vector) object;
-        int n = this.arrayDoubles.length;
+        int n = this.vectorArray.length;
 
-        if (vector.arrayDoubles.length != n) {
+        if (vector.vectorArray.length != n) {
             return false;
         }
 
         for (int i = 0; i < n; i++) {
-            if (this.arrayDoubles[i] != vector.arrayDoubles[i]) {
+            if (this.vectorArray[i] != vector.vectorArray[i]) {
                 return false;
             }
         }
@@ -161,12 +165,6 @@ public class Vector {
 
     @Override
     public int hashCode() {
-        final int prime = 13;
-        int hash = 1;
-
-        for (double itemArrayDouble : this.arrayDoubles) {
-            hash = prime * hash + Double.hashCode(itemArrayDouble);
-        }
-        return hash;
+        return Arrays.hashCode(this.vectorArray);
     }
 }
