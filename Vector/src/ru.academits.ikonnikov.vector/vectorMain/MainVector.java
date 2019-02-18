@@ -35,7 +35,6 @@ public class MainVector {
         Vector v5 = new Vector(v3);
         System.out.println("Vector v5 is copy of v3 : " + v5.toString());
 
-
         System.out.println("The result of addition of vectors v1 and v2 by nonstatic method is: " + v1.add(v2).toString());
 
         System.out.println("The result of addition of vectors v1 and v2 by static method is: " + add(v1, v2).toString());
@@ -53,6 +52,7 @@ public class MainVector {
         System.out.println("The result of comparing vectors v3 and v5 is: " + v3.equals(v5));
 
         System.out.printf("  The first component of vector v4 = %.2f %n  The second component of vector v4 = %.2f %n", v4.getComponent(0), v4.getComponent(1));
+
         System.out.printf("The hashCode of vector v2 = %d %n", v2.hashCode());
         System.out.printf("The hashCode of vector v4 = %d %n", v4.hashCode());
     }
