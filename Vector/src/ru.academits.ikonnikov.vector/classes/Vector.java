@@ -5,29 +5,26 @@ import java.lang.IndexOutOfBoundsException;
 import java.util.Arrays;
 
 public class Vector {
-    public double[] vectorArray;
+    public double[] components;
 
     public Vector(int vectorSize) {
         if (vectorSize < 1) {
             throw new IllegalArgumentException("The parameter 'vectorSize' must be > 0!");
         }
 
-        this.vectorArray = new double[vectorSize];
+        this.components = new double[vectorSize];
     }
 
     public Vector(Vector vector) {
-        int vectorSize = vector.vectorArray.length;
-        this.vectorArray = Arrays.copyOf(vector.vectorArray, vectorSize);
+        this.components = Arrays.copyOf(vector.components, vector.components.length);
     }
 
     public Vector(double[] array) {
-        int arrayLength = array.length;
-
-        if (arrayLength == 0) {
+        if (array.length == 0) {
             throw new IllegalArgumentException("The length of array must be > 0!");
         }
 
-        this.vectorArray = Arrays.copyOf(array, arrayLength);
+        this.components = Arrays.copyOf(array, array.length);
     }
 
     public Vector(int vectorSize, double[] array) {
@@ -35,46 +32,40 @@ public class Vector {
             throw new IllegalArgumentException("The parameter 'vectorSize' must be > 0!");
         }
 
-        this.vectorArray = Arrays.copyOf(array, vectorSize);;
+        this.components = Arrays.copyOf(array, vectorSize);
     }
 
     public int getSize() {
-        return this.vectorArray.length;
+        return this.components.length;
     }
 
     public Vector add(Vector vector) {
-        int m = vector.vectorArray.length;
-        int n = this.vectorArray.length;
-
-        if (m >= n) {
-            this.vectorArray = Arrays.copyOf(this.vectorArray, m);
+        if (vector.components.length > this.components.length) {
+            this.components = Arrays.copyOf(this.components, vector.components.length);
         }
 
-        for (int i = 0; i < m; i++) {
-            this.vectorArray[i] += vector.vectorArray[i];
+        for (int i = 0; i < vector.components.length; i++) {
+            this.components[i] += vector.components[i];
         }
 
         return this;
     }
 
     public Vector subtract(Vector vector) {
-        int m = vector.vectorArray.length;
-        int n = this.vectorArray.length;
-
-        if (m >= n) {
-            this.vectorArray = Arrays.copyOf(this.vectorArray, m);
+        if (vector.components.length > this.components.length) {
+            this.components = Arrays.copyOf(this.components, vector.components.length);
         }
 
-        for (int i = 0; i < m; i++) {
-            this.vectorArray[i] -= vector.vectorArray[i];
+        for (int i = 0; i < vector.components.length; i++) {
+            this.components[i] -= vector.components[i];
         }
 
         return this;
     }
 
     public Vector multiplyByScalar(double scalar) {
-        for (int i = 0; i < this.vectorArray.length; i++) {
-            this.vectorArray[i] *= scalar;
+        for (int i = 0; i < this.components.length; i++) {
+            this.components[i] *= scalar;
         }
         return this;
     }
@@ -86,56 +77,57 @@ public class Vector {
     public double getLength() {
         double sum = 0;
 
-        for (double item : this.vectorArray) {
+        for (double item : this.components) {
             sum += item * item;
         }
         return Math.sqrt(sum);
     }
 
     public double getComponent(int index) {
-        if (index < 0 || index >= this.vectorArray.length) {
+        if (index < 0 || index >= this.components.length) {
             throw new IndexOutOfBoundsException("The index of array isn't correct!");
         }
-        return this.vectorArray[index];
+        return this.components[index];
     }
 
     public void setComponent(int index, double arrayComponent) {
-        if (index < 0 || index >= this.vectorArray.length) {
+        if (index < 0 || index >= this.components.length) {
             throw new IndexOutOfBoundsException("The index of array isn't correct!");
         }
-        this.vectorArray[index] = arrayComponent;
+        this.components[index] = arrayComponent;
     }
 
     public static Vector add(Vector vector1, Vector vector2) {
-        Vector vector3 = new Vector(vector1);
-        return vector3.add(vector2);
+        Vector vectorCopy = new Vector(vector1);
+        return vectorCopy.add(vector2);
     }
 
     public static Vector subtract(Vector vector1, Vector vector2) {
-        Vector vector3 = new Vector(vector1);
-        return vector3.subtract(vector2);
+        Vector vectorCopy = new Vector(vector1);
+        return vectorCopy.subtract(vector2);
     }
 
     public static double multiplyScalar(Vector vector1, Vector vector2) {
-        int minSize = Math.min(vector1.vectorArray.length, vector2.vectorArray.length);
+        int minSize = Math.min(vector1.components.length, vector2.components.length);
         double result = 0;
 
         for (int i = 0; i < minSize; i++) {
-            result += vector1.vectorArray[i] * vector2.vectorArray[i];
+            result += vector1.components[i] * vector2.components[i];
         }
         return result;
     }
 
     @Override
     public String toString() {
-        int arrayLength = this.vectorArray.length;
+        int arrayLength = this.components.length;
         StringBuilder result = new StringBuilder("{");
 
-        for (int i = 0; i < arrayLength - 1; i++) {
-            String str = String.format(" %.2f ,", this.vectorArray[i]);
+        for (int i = 0; i < (arrayLength - 1); i++) {
+            String str = String.format(" %.2f ,", this.components[i]);
             result = result.append(str);
         }
-        return result.append(String.format(" %.2f }", this.vectorArray[arrayLength - 1])).toString();
+        String str = String.format(" %.2f }", this.components[arrayLength - 1]);
+        return result.append(str).toString();
     }
 
     @Override
@@ -149,14 +141,13 @@ public class Vector {
         }
 
         Vector vector = (Vector) object;
-        int n = this.vectorArray.length;
 
-        if (vector.vectorArray.length != n) {
+        if (vector.components.length != this.components.length) {
             return false;
         }
 
-        for (int i = 0; i < n; i++) {
-            if (this.vectorArray[i] != vector.vectorArray[i]) {
+        for (int i = 0; i < this.components.length; i++) {
+            if (this.components[i] != vector.components[i]) {
                 return false;
             }
         }
@@ -165,6 +156,6 @@ public class Vector {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(this.vectorArray);
+        return Arrays.hashCode(this.components);
     }
 }
