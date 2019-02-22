@@ -1,4 +1,4 @@
-package ru.academits.ikonnikov.matrix.mainMatrix;
+package ru.academits.ikonnikov.matrix.matrixMain;
 
 import ru.academits.ikonnikov.matrix.classes.Matrix;
 
