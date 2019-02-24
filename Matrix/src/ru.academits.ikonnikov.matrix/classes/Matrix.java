@@ -1,148 +1,170 @@
 package ru.academits.ikonnikov.matrix.classes;
 
+import ru.academits.ikonnikov.matrix.mainMatrix.Vector;
+
 import java.lang.IllegalArgumentException;
 import java.lang.IndexOutOfBoundsException;
 import java.util.Arrays;
 
-import ru.academits.ikonnikov.vector.classes.Vector;
-
-import static ru.academits.ikonnikov.matrix.classes.MatrixDeterminant.getMatrixDeterminant;
-import static ru.academits.ikonnikov.vector.classes.Vector.multiplyScalar;
-
 public class Matrix {
-    private Vector[] vectors;
+    private Vector[] rows;
 
     public Matrix(int rowsNumber, int columnsNumber) {
         if (rowsNumber < 1 || columnsNumber < 1) {
             throw new IllegalArgumentException("The parameters 'rowsNumber' and 'columnsNumber' must be > 0!");
         }
 
-        this.vectors = new Vector[rowsNumber];
+        this.rows = new Vector[rowsNumber];
 
         for (int i = 0; i < rowsNumber; i++) {
-            this.vectors[i] = new Vector(columnsNumber);
+            this.rows[i] = new Vector(columnsNumber);
         }
     }
 
     public Matrix(Matrix matrix) {
-        this.vectors = new Vector[matrix.vectors.length];
+        this.rows = new Vector[matrix.rows.length];
 
-        for (int i = 0; i < matrix.vectors.length; i++) {
-            this.vectors[i] = new Vector(matrix.vectors[i].components);
+        for (int i = 0; i < matrix.rows.length; i++) {
+            this.rows[i] = new Vector(matrix.getRow(i));
         }
     }
 
     public Matrix(double[][] array) {
-        this.vectors = new Vector[array.length];
+        if (array.length < 1) {
+            throw new IllegalArgumentException("The length of array must be > 0!");
+        }
+        int maxSize = array[0].length;
+
+        for (int i = 1; i < array.length; i++) {
+            if (array[i].length > maxSize) {
+                maxSize = array[i].length;
+            }
+        }
+        this.rows = new Vector[array.length];
 
         for (int i = 0; i < array.length; i++) {
-            this.vectors[i] = new Vector(array[i]);
+            this.rows[i] = new Vector(maxSize, array[i]);
         }
     }
 
     public Matrix(Vector[] vectors) {
-        this.vectors = new Vector[vectors.length];
+        if (vectors.length < 1) {
+            throw new IllegalArgumentException("The length of array must be > 0!");
+        }
+        this.rows = new Vector[vectors.length];
+
+        int maxSize = vectors[0].getSize();
+
+        for (int i = 1; i < vectors.length; i++) {
+            if (vectors[i].getSize() > maxSize) {
+                maxSize = vectors[i].getSize();
+            }
+        }
 
         for (int i = 0; i < vectors.length; i++) {
-            this.vectors[i] = new Vector(vectors[i]);
+            this.rows[i] = new Vector(maxSize, vectors[i].getComponent());
         }
     }
 
     public int getRowsNumber() {
-        return this.vectors.length;
+        return this.rows.length;
     }
 
     public int getColumnsNumber() {
-        return this.vectors[0].getSize();
+        return this.rows[0].getSize();
     }
 
-    public Vector getRowVector(int index) {
-        if (index < 0 || index > this.vectors.length) {
+    public Vector getRow(int index) {
+        if (index < 0 || index >= this.rows.length) {
             throw new IndexOutOfBoundsException("The index is not correct!");
         }
 
-        return this.vectors[index];
+        return new Vector(this.rows[index]);
     }
 
-    public void setVectorRow(int index, Vector component) {
-        if (index < 0 || index > this.vectors.length) {
+    public void setRow(int index, Vector component) {
+        if (index < 0 || index >= this.rows.length) {
             throw new IndexOutOfBoundsException("The index is not correct!");
         }
 
-        if (this.vectors[0].getSize() != component.getSize()) {
+        if (this.getColumnsNumber() != component.getSize()) {
             throw new IllegalArgumentException("The size of component is not correct!");
         }
 
-        this.vectors[index] = component;
+        this.rows[index] = new Vector(component);
     }
 
-    public Vector getColumnVector(int index) {
-        if (index < 0 || index > this.vectors[0].getSize()) {
+    public Vector getColumn(int index) {
+        if (index < 0 || index >= this.getColumnsNumber()) {
             throw new IndexOutOfBoundsException("The index is not correct!");
         }
 
-        Vector vectorColumn = new Vector(this.vectors.length);
+        Vector vectorColumn = new Vector(this.rows.length);
 
-        for (int i = 0; i < this.vectors.length; i++) {
-            vectorColumn.components[i] = this.vectors[i].components[index];
+        for (int i = 0; i < this.rows.length; i++) {
+            vectorColumn.setComponent(i, this.rows[i].getComponent(index));
         }
         return vectorColumn;
     }
 
     public Matrix add(Matrix matrix) {
-        if (this.vectors.length != matrix.vectors.length || this.vectors[0].getSize() != matrix.vectors[0].getSize()) {
+        if (this.rows.length != matrix.rows.length || this.getColumnsNumber() != matrix.getColumnsNumber()) {
             throw new IllegalArgumentException("The addition is impossible, because matrices have not the same dimension!");
         }
 
-        for (int i = 0; i < this.vectors.length; i++) {
-            this.vectors[i].add(matrix.vectors[i]);
+        for (int i = 0; i < this.rows.length; i++) {
+            this.rows[i].add(matrix.rows[i]);
         }
 
         return this;
     }
 
     public Matrix subtract(Matrix matrix) {
-        if (this.vectors.length != matrix.vectors.length || this.vectors[0].getSize() != matrix.vectors[0].getSize()) {
+        if (this.rows.length != matrix.rows.length || this.getColumnsNumber() != matrix.getColumnsNumber()) {
             throw new IllegalArgumentException("The subtraction is impossible, because matrices have not the same dimension!");
         }
 
-        for (int i = 0; i < this.vectors.length; i++) {
-            this.vectors[i].subtract(matrix.vectors[i]);
+        for (int i = 0; i < this.rows.length; i++) {
+            this.rows[i].subtract(matrix.rows[i]);
         }
 
         return this;
     }
 
     public Matrix multiplyByScalar(double scalar) {
-        for (Vector vector : this.vectors) {
+        for (Vector vector : this.rows) {
             vector.multiplyByScalar(scalar);
         }
         return this;
     }
-
+    
     public Matrix transpose() {
-        int columnsNumber = this.vectors[0].getSize();
-        Matrix resultMatrix = new Matrix(columnsNumber, this.vectors.length);
+        int columnsNumber = this.getColumnsNumber();
+        double[][] array = new double[columnsNumber][this.rows.length];
 
         for (int i = 0; i < columnsNumber; i++) {
-            resultMatrix.vectors[i] = this.getColumnVector(i);
+            array[i] = Arrays.copyOf(this.getColumn(i).getComponent(), this.rows.length);
         }
 
-        this.vectors = Arrays.copyOf(resultMatrix.vectors, columnsNumber);
+        this.rows = new Vector[columnsNumber];
+
+        for (int i = 0; i < columnsNumber; i++) {
+            this.rows[i] = new Vector(array[i]);
+        }
         return this;
     }
 
     public double calculateDeterminant() {
-        double[][] array = new double[this.vectors.length][this.vectors[0].getSize()];
+        double[][] array = new double[this.rows.length][this.getColumnsNumber()];
 
-        for (int i = 0; i < this.vectors.length; i++) {
-            array[i] = Arrays.copyOf(this.vectors[i].components, this.vectors[0].getSize());
+        for (int i = 0; i < this.rows.length; i++) {
+            array[i] = Arrays.copyOf(this.rows[i].getComponent(), this.getColumnsNumber());
         }
-        return getMatrixDeterminant(array);
+        return ru.academits.ikonnikov.matrix.classes.MatrixDeterminant.getMatrixDeterminant(array);
     }
 
     public static Matrix add(Matrix matrix1, Matrix matrix2) {
-        if (matrix1.vectors.length != matrix2.vectors.length || matrix1.vectors[0].getSize() != matrix2.vectors[0].getSize()) {
+        if (matrix1.rows.length != matrix2.rows.length || matrix1.getColumnsNumber() != matrix2.getColumnsNumber()) {
             throw new IllegalArgumentException("The addition is impossible, because matrices have not the same dimension!");
         }
 
@@ -151,7 +173,7 @@ public class Matrix {
     }
 
     public static Matrix subtract(Matrix matrix1, Matrix matrix2) {
-        if (matrix1.vectors.length != matrix2.vectors.length || matrix1.vectors[0].getSize() != matrix2.vectors[0].getSize()) {
+        if (matrix1.rows.length != matrix2.rows.length || matrix1.getColumnsNumber() != matrix2.getColumnsNumber()) {
             throw new IllegalArgumentException("The subtraction is impossible, because matrices have not the same dimension!");
         }
 
@@ -160,30 +182,30 @@ public class Matrix {
     }
 
     public Vector multiplyByVector(Vector vector) {
-        if (this.vectors[0].getSize() != vector.getSize()) {
-            throw new IllegalArgumentException ("The multiplication is impossible, because size of vector is not equal to the number of columns of matrix");
+        if (this.getColumnsNumber() != vector.getSize()) {
+            throw new IllegalArgumentException("The multiplication is impossible, because size of vector is not equal to the number of columns of matrix");
         }
 
-        Vector resultVector = new Vector(this.vectors.length);
+        Vector resultVector = new Vector(this.rows.length);
 
-        for (int i = 0; i < this.vectors.length; i++) {
-            resultVector.components[i] = multiplyScalar(vector, this.vectors[i]);
+        for (int i = 0; i < this.rows.length; i++) {
+            resultVector.setComponent(i, Vector.multiplyScalar(vector, this.rows[i]));
         }
         return resultVector;
     }
 
     public static Matrix multiply(Matrix matrix1, Matrix matrix2) {
-        if (matrix1.vectors[0].getSize() != matrix2.vectors.length) {
-            throw new IllegalArgumentException ("The multiplication is impossible, because number of columns of the first matrix  is not equal to the number of rows of the second matrix!");
+        if (matrix1.getColumnsNumber() != matrix2.rows.length) {
+            throw new IllegalArgumentException("The multiplication is impossible, because number of columns of the first matrix  is not equal to the number of rows of the second matrix!");
         }
 
-        Matrix resultMatrix = new Matrix(matrix1.vectors.length, matrix2.vectors[0].getSize());
+        Matrix resultMatrix = new Matrix(matrix1.rows.length, matrix2.rows[0].getSize());
 
-        for (int i = 0; i < matrix1.vectors.length; i++) {
-            for (int j = 0; j < matrix2.vectors[0].getSize(); j++) {
-                Vector vectorRow = matrix1.vectors[i];
-                Vector vectorColumn = matrix2.getColumnVector(j);
-                resultMatrix.vectors[i].components[j] = multiplyScalar(vectorRow, vectorColumn);
+        for (int i = 0; i < matrix1.rows.length; i++) {
+            for (int j = 0; j < matrix2.getColumnsNumber(); j++) {
+                Vector vectorRow = matrix1.rows[i];
+                Vector vectorColumn = matrix2.getColumn(j);
+                resultMatrix.rows[i].setComponent(j, Vector.multiplyScalar(vectorRow, vectorColumn));
             }
         }
         return resultMatrix;
@@ -191,15 +213,15 @@ public class Matrix {
 
     @Override
     public String toString() {
-        int rowsNumber = this.vectors.length;
+        int rowsNumber = this.rows.length;
         StringBuilder result = new StringBuilder("{");
 
         for (int i = 0; i < (rowsNumber - 1); i++) {
-            String str = this.vectors[i].toString();
+            String str = this.rows[i].toString();
             result.append(str).append(", ");
         }
 
-        String str = this.vectors[rowsNumber - 1].toString();
+        String str = this.rows[rowsNumber - 1].toString();
         return result.append(str).append("}").toString();
     }
 }
