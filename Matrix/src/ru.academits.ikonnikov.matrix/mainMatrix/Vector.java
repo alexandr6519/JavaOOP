@@ -19,7 +19,7 @@ public class Vector {
         this.components = Arrays.copyOf(vector.components, vector.components.length);
     }
 
-    public Vector(double[] array) {
+    Vector(double[] array) {
         if (array.length == 0) {
             throw new IllegalArgumentException("The length of array must be > 0!");
         }
@@ -33,10 +33,6 @@ public class Vector {
         }
 
         this.components = Arrays.copyOf(array, vectorSize);
-    }
-
-    public double[] getComponent() {
-        return this.components;
     }
 
     public int getSize() {
@@ -128,7 +124,7 @@ public class Vector {
 
         for (int i = 0; i < (arrayLength - 1); i++) {
             String str = String.format(" %.2f ,", this.components[i]);
-            result = result.append(str);
+            result.append(str);
         }
         String str = String.format(" %.2f }", this.components[arrayLength - 1]);
         return result.append(str).toString();

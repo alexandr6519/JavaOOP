@@ -19,14 +19,14 @@ public class MainMatrix {
         double[][] array1 = {{11.0, 2.5, 5.1}, {-1.2, 3.6, 8.4}};
         Matrix m2 = new Matrix(array1);
         System.out.println("Matrix m2 : " + m2.toString());
-        System.out.printf("The determinant of matrix m2 = %.2f %n", m2.calculateDeterminant());
+
         System.out.println("The second row of matrix m2 : " + m2.getRow(1).toString());
         System.out.println("The second column of matrix m2 : " + m2.getColumn(1).toString());
 
         double[][] array2 = {{-1.0, -4.2, 2.2, 5.6}, {3.2, 5.9, -4.8, 21.0}, {7.1, 5.0, 9.6, -4.5}};
         Matrix m3 = new Matrix(array2);
         System.out.println("Matrix m3 : " + m3.toString());
-        System.out.printf("The determinant of matrix m3 = %.2f %n", m3.calculateDeterminant());
+
 
         Matrix m4 = new Matrix(m2);
         System.out.println("Matrix m4 is copy of m2 : " + m4.toString());
@@ -46,6 +46,7 @@ public class MainMatrix {
         Vector v3 = new Vector(arrayV3);
         Vector[] vectors = {v1, v2, v3};
         Matrix m6 = new Matrix(vectors);
+        System.out.printf("The determinant of matrix m6 = %.2f %n", m6.calculateDeterminant());
         System.out.println("Matrix m6 : " + m6.toString());
 
         m2.setRow(0, v2);
@@ -53,6 +54,8 @@ public class MainMatrix {
         System.out.println(" After changing of values matrix m2 : " + m2.toString());
 
         System.out.println("The result of addition of matrices m1 and m6 by nonstatic method is: " + m1.add(m6).toString());
+
+        System.out.printf("The determinant of matrix m1 = %.2f %n", m1.calculateDeterminant());
 
         System.out.println("The result of addition of matrices m5 and m4 by nonstatic method is: " + m5.add(m4).toString());
 
@@ -77,5 +80,9 @@ public class MainMatrix {
         System.out.printf("The result of multiplication of matrix m6 on matrix m3  = %s %n", (ru.academits.ikonnikov.matrix.classes.Matrix.multiply(m6, m3)).toString());
 
         System.out.println("The result of transposition of matrix m4 : " + m4.transpose().toString());
+
+        double[][] array4 = {{-1.0, -4.2, 2.2, 5.6}, {}, {7.1, 5.0, 9.6, -4.5}};
+        Matrix m8 = new Matrix(array4);
+        System.out.println("Matrix m8 : " + m8.toString());
     }
 }
