@@ -25,14 +25,25 @@ public class Matrix {
         this.rows = new Vector[matrix.rows.length];
 
         for (int i = 0; i < matrix.rows.length; i++) {
-            this.rows[i] = new Vector(matrix.getRow(i));
+            this.rows[i] = new Vector(matrix.rows[i]);
         }
     }
 
     public Matrix(double[][] array) {
-        if (array.length < 1) {
-            throw new IllegalArgumentException("The length of array must be > 0!");
+        boolean isEmpty = false;
+
+        if (array.length == 0) {
+            isEmpty = true;
+        } else {
+            for (int i = 1; i < array.length; i++) {
+                isEmpty = isEmpty || array[i].length == 0;
+            }
         }
+
+        if (isEmpty) {
+            throw new IllegalArgumentException("The array has empty row!");
+        }
+
         int maxSize = array[0].length;
 
         for (int i = 1; i < array.length; i++) {
@@ -47,22 +58,31 @@ public class Matrix {
         }
     }
 
-    public Matrix(Vector[] vectors) {
-        if (vectors.length < 1) {
+    private double[] getArray(Vector vector) {
+        double[] array = new double[vector.getSize()];
+
+        for (int i = 1; i < vector.getSize(); i++) {
+            array[i] = vector.getComponent(i);
+        }
+        return array;
+    }
+
+    public Matrix(Vector[] rows) {
+        if (rows.length < 1) {
             throw new IllegalArgumentException("The length of array must be > 0!");
         }
-        this.rows = new Vector[vectors.length];
+        this.rows = new Vector[rows.length];
 
-        int maxSize = vectors[0].getSize();
+        int maxSize = rows[0].getSize();
 
-        for (int i = 1; i < vectors.length; i++) {
-            if (vectors[i].getSize() > maxSize) {
-                maxSize = vectors[i].getSize();
+        for (int i = 1; i < rows.length; i++) {
+            if (rows[i].getSize() > maxSize) {
+                maxSize = rows[i].getSize();
             }
         }
 
-        for (int i = 0; i < vectors.length; i++) {
-            this.rows[i] = new Vector(maxSize, vectors[i].getComponent());
+        for (int i = 0; i < rows.length; i++) {
+            this.rows[i] = new Vector(maxSize, getArray(rows[i]));
         }
     }
 
@@ -82,16 +102,16 @@ public class Matrix {
         return new Vector(this.rows[index]);
     }
 
-    public void setRow(int index, Vector component) {
+    public void setRow(int index, Vector row) {
         if (index < 0 || index >= this.rows.length) {
             throw new IndexOutOfBoundsException("The index is not correct!");
         }
 
-        if (this.getColumnsNumber() != component.getSize()) {
+        if (this.getColumnsNumber() != row.getSize()) {
             throw new IllegalArgumentException("The size of component is not correct!");
         }
 
-        this.rows[index] = new Vector(component);
+        this.rows[index] = new Vector(row);
     }
 
     public Vector getColumn(int index) {
@@ -137,35 +157,37 @@ public class Matrix {
         }
         return this;
     }
-    
+
     public Matrix transpose() {
         int columnsNumber = this.getColumnsNumber();
-        double[][] array = new double[columnsNumber][this.rows.length];
+        Vector[] columns = new Vector[columnsNumber];
 
         for (int i = 0; i < columnsNumber; i++) {
-            array[i] = Arrays.copyOf(this.getColumn(i).getComponent(), this.rows.length);
+            columns[i] = this.getColumn(i);
         }
 
-        this.rows = new Vector[columnsNumber];
+        this.rows = columns;
 
-        for (int i = 0; i < columnsNumber; i++) {
-            this.rows[i] = new Vector(array[i]);
-        }
         return this;
     }
 
     public double calculateDeterminant() {
-        double[][] array = new double[this.rows.length][this.getColumnsNumber()];
+        if (this.getRowsNumber() != this.getColumnsNumber()) {
+            throw new IllegalArgumentException("The number of columns must be equal to the number of rows!");
+        }
+        double[][] array = new double[this.rows.length][this.rows.length];
 
         for (int i = 0; i < this.rows.length; i++) {
-            array[i] = Arrays.copyOf(this.rows[i].getComponent(), this.getColumnsNumber());
+            for (int j = 0; j < this.rows.length; j++) {
+                array[i][j] = this.rows[i].getComponent(j);
+            }
         }
-        return ru.academits.ikonnikov.matrix.classes.MatrixDeterminant.getMatrixDeterminant(array);
+        return MatrixDeterminant.getMatrixDeterminant(array);
     }
 
     public static Matrix add(Matrix matrix1, Matrix matrix2) {
         if (matrix1.rows.length != matrix2.rows.length || matrix1.getColumnsNumber() != matrix2.getColumnsNumber()) {
-            throw new IllegalArgumentException("The addition is impossible, because matrices have not the same dimension!");
+            throw new IllegalArgumentException(" addition is impossible, because matrices have not the same dimension!");
         }
 
         Matrix matrixCopy = new Matrix(matrix1);
@@ -199,7 +221,7 @@ public class Matrix {
             throw new IllegalArgumentException("The multiplication is impossible, because number of columns of the first matrix  is not equal to the number of rows of the second matrix!");
         }
 
-        Matrix resultMatrix = new Matrix(matrix1.rows.length, matrix2.rows[0].getSize());
+        Matrix resultMatrix = new Matrix(matrix1.rows.length, matrix2.getColumnsNumber());
 
         for (int i = 0; i < matrix1.rows.length; i++) {
             for (int j = 0; j < matrix2.getColumnsNumber(); j++) {
