@@ -33,6 +33,7 @@ public class arrayListHome {
                 end--;
             }
         }
+        
         System.out.println(numbers1);
 
         ArrayList<Integer> numbers2 = new ArrayList<>(Arrays.asList(7, 2, 19, 12, 4, 5, 12, 17, 6, 14, 12, 19, 17, 7, 3, 4, 14));
@@ -52,7 +53,7 @@ public class arrayListHome {
                 numbersNoRepeats.add(numbers2.get(i));
             }
         }
+        
         System.out.println(numbersNoRepeats);
-
     }
 }
