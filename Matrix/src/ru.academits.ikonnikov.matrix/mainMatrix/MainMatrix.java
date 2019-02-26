@@ -81,7 +81,7 @@ public class MainMatrix {
 
         System.out.println("The result of transposition of matrix m4 : " + m4.transpose().toString());
 
-        double[][] array4 = {{-1.0, -4.2, 2.2, 5.6}, {}, {7.1, 5.0, 9.6, -4.5}};
+        double[][] array4 = {{}, {1}, {}};
         Matrix m8 = new Matrix(array4);
         System.out.println("Matrix m8 : " + m8.toString());
     }
