@@ -4,7 +4,6 @@ import ru.academits.ikonnikov.matrix.mainMatrix.Vector;
 
 import java.lang.IllegalArgumentException;
 import java.lang.IndexOutOfBoundsException;
-import java.util.Arrays;
 
 public class Matrix {
     private Vector[] rows;
@@ -30,18 +29,19 @@ public class Matrix {
     }
 
     public Matrix(double[][] array) {
-        boolean isEmpty = false;
+        boolean isEmpty;
 
         if (array.length == 0) {
             isEmpty = true;
         } else {
-            for (int i = 1; i < array.length; i++) {
-                isEmpty = isEmpty || array[i].length == 0;
+            isEmpty = true;
+            for (double[] doubles : array) {
+                isEmpty = isEmpty && (doubles.length == 0);
             }
         }
 
         if (isEmpty) {
-            throw new IllegalArgumentException("The array has empty row!");
+            throw new IllegalArgumentException("This array is empty!");
         }
 
         int maxSize = array[0].length;
@@ -58,10 +58,10 @@ public class Matrix {
         }
     }
 
-    private double[] getArray(Vector vector) {
+    private static double[] getArray(Vector vector) {
         double[] array = new double[vector.getSize()];
 
-        for (int i = 1; i < vector.getSize(); i++) {
+        for (int i = 0; i < vector.getSize(); i++) {
             array[i] = vector.getComponent(i);
         }
         return array;
