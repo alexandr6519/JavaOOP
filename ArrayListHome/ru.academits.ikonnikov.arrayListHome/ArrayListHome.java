@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class arrayListHome {
+public class ArrayListHome {
     public static void main(String[] args) {
         try {
             Scanner scanner = new Scanner(new FileInputStream("./res/input.txt"));
