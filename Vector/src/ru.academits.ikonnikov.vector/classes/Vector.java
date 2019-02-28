@@ -5,7 +5,7 @@ import java.lang.IndexOutOfBoundsException;
 import java.util.Arrays;
 
 public class Vector {
-    public double[] components;
+    private double[] components;
 
     public Vector(int vectorSize) {
         if (vectorSize < 1) {
@@ -124,7 +124,7 @@ public class Vector {
 
         for (int i = 0; i < (arrayLength - 1); i++) {
             String str = String.format(" %.2f ,", this.components[i]);
-            result = result.append(str);
+            result.append(str);
         }
         String str = String.format(" %.2f }", this.components[arrayLength - 1]);
         return result.append(str).toString();
@@ -159,3 +159,6 @@ public class Vector {
         return Arrays.hashCode(this.components);
     }
 }
+
+
+
