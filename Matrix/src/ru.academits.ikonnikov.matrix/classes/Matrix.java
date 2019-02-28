@@ -1,6 +1,6 @@
 package ru.academits.ikonnikov.matrix.classes;
 
-import ru.academits.ikonnikov.matrix.mainMatrix.Vector;
+import ru.academits.ikonnikov.vector.classes.Vector;
 
 import java.lang.IllegalArgumentException;
 import java.lang.IndexOutOfBoundsException;
@@ -29,28 +29,23 @@ public class Matrix {
     }
 
     public Matrix(double[][] array) {
-        boolean isEmpty;
+        boolean isEmpty = false;
+        int maxSize = 0;
 
         if (array.length == 0) {
             isEmpty = true;
         } else {
-            isEmpty = true;
             for (double[] doubles : array) {
-                isEmpty = isEmpty && (doubles.length == 0);
+                if (doubles.length > maxSize) {
+                    maxSize = doubles.length;
+                }
             }
         }
 
-        if (isEmpty) {
+        if (isEmpty || maxSize == 0) {
             throw new IllegalArgumentException("This array is empty!");
         }
 
-        int maxSize = array[0].length;
-
-        for (int i = 1; i < array.length; i++) {
-            if (array[i].length > maxSize) {
-                maxSize = array[i].length;
-            }
-        }
         this.rows = new Vector[array.length];
 
         for (int i = 0; i < array.length; i++) {
