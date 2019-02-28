@@ -1,5 +1,6 @@
 package ru.academits.ikonnikov.matrix.mainMatrix;
 
+import ru.academits.ikonnikov.vector.classes.Vector;
 import ru.academits.ikonnikov.matrix.classes.Matrix;
 
 public class MainMatrix {
@@ -59,13 +60,13 @@ public class MainMatrix {
 
         System.out.println("The result of addition of matrices m5 and m4 by nonstatic method is: " + m5.add(m4).toString());
 
-        System.out.println("The result of addition of matrices m1 and m6 by static method is: " + (ru.academits.ikonnikov.matrix.classes.Matrix.add(m1, m6)).toString());
+        System.out.println("The result of addition of matrices m1 and m6 by static method is: " + (Matrix.add(m1, m6)).toString());
 
         System.out.println("The result of subtraction of matrix m6 from matrix m1 by nonstatic method is: " + m1.subtract(m6).toString());
 
         System.out.println("The result of subtraction of matrix m4 from matrix m5 by nonstatic method is: " + m5.subtract(m4).toString());
 
-        System.out.println("The result of subtraction of matrix m4 from matrix m5 by static method is: " + (ru.academits.ikonnikov.matrix.classes.Matrix.subtract(m5, m4)).toString());
+        System.out.println("The result of subtraction of matrix m4 from matrix m5 by static method is: " + (Matrix.subtract(m5, m4)).toString());
 
         System.out.println("The result of multiplication of matrix m3 by scalar (-1.3) is: " + m3.multiplyByScalar(-1.3).toString());
 
@@ -73,15 +74,15 @@ public class MainMatrix {
 
         System.out.printf("The result of multiplication of matrix m6 by vector v2  = %s %n", m6.multiplyByVector(v2).toString());
 
-        System.out.printf("The result of multiplication of matrix m2 on matrix m5  = %s %n", (ru.academits.ikonnikov.matrix.classes.Matrix.multiply(m2, m5)).toString());
+        System.out.printf("The result of multiplication of matrix m2 on matrix m5  = %s %n", (Matrix.multiply(m2, m5)).toString());
 
-        System.out.printf("The result of multiplication of matrix m1 on matrix m5  = %s %n", (ru.academits.ikonnikov.matrix.classes.Matrix.multiply(m1, m5)).toString());
+        System.out.printf("The result of multiplication of matrix m1 on matrix m5  = %s %n", (Matrix.multiply(m1, m5)).toString());
 
-        System.out.printf("The result of multiplication of matrix m6 on matrix m3  = %s %n", (ru.academits.ikonnikov.matrix.classes.Matrix.multiply(m6, m3)).toString());
+        System.out.printf("The result of multiplication of matrix m6 on matrix m3  = %s %n", (Matrix.multiply(m6, m3)).toString());
 
         System.out.println("The result of transposition of matrix m4 : " + m4.transpose().toString());
 
-        double[][] array4 = {{}, {1}, {}};
+        double[][] array4 = {{}, {}, {1}};
         Matrix m8 = new Matrix(array4);
         System.out.println("Matrix m8 : " + m8.toString());
     }
