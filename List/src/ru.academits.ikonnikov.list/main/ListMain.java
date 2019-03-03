@@ -16,7 +16,7 @@ public class ListMain {
         System.out.println("The list is:" + list.toString());
 
         System.out.println("The size of this list is: " + list.getLength());
-        System.out.println("The head of list is: " + list.getHead().toString());
+       
         System.out.println("The data of head is: " + list.getHeadData());
 
         System.out.println("The data by index '1' before setting is : " + list.setData(1, "Not"));
@@ -39,5 +39,7 @@ public class ListMain {
 
         System.out.println("The data of removing of 'head' is: " + list.removeHead());
         System.out.println("The list after removing 'head' is :" + list.toString());
+        
+         System.out.println("The head of list is: " + list.getHead().toString());
     }
 }
