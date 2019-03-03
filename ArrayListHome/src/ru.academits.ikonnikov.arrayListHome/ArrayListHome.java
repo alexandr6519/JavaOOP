@@ -10,20 +10,15 @@ public class ArrayListHome {
     public static void main(String[] args) {
         try {
             Scanner scanner = new Scanner(new FileInputStream("./res/input.txt"));
+            ArrayList<String> list = new ArrayList<>();
 
-            if (!scanner.hasNext()) {
-                System.out.println("This file is empty!");
-            } else {
-                ArrayList<String> list = new ArrayList<>();
-
-                while (scanner.hasNext()) {
-                    list.add(scanner.next());
-                }
-                System.out.println(list);
+            while (scanner.hasNext()) {
+                list.add(scanner.next());
             }
+            System.out.println(list);
+
         } catch (FileNotFoundException e) {
             System.out.println("The file is not exist!");
-            e.printStackTrace();
         }
 
         ArrayList<Integer> numbers1 = new ArrayList<>(Arrays.asList(13, 4, 18, 9, 10, 9, 14, 19, 2, 4, 16, 1, 7, 27, 13, 6, 11));
@@ -42,11 +37,9 @@ public class ArrayListHome {
         ArrayList<Integer> numbersNoRepeats = new ArrayList<>();
         System.out.println(numbers2);
 
-        if (!numbers2.isEmpty()) {
-            for (Integer integer : numbers2) {
-                if (!numbersNoRepeats.contains(integer)) {
+        for (Integer integer : numbers2) {
+            if (!numbersNoRepeats.contains(integer)) {
                     numbersNoRepeats.add(integer);
-                }
             }
         }
         System.out.println(numbersNoRepeats);
