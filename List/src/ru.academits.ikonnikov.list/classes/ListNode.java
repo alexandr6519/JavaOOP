@@ -31,11 +31,10 @@ public class ListNode<T> {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("Node :[");
-        if (this.getNext() == null) {
-            return null;
+        if (this == null) {
+            return "Node is null!";
         }
-        String str = String.format("DATA: %s , NEXT: %s ]", data, next);
-        return result.append(str).toString();
+
+        return "Node :[DATA: " + data + ", NEXT:" + next + "]";
     }
 }
