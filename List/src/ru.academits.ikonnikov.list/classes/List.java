@@ -79,6 +79,7 @@ public class List<T> {
                 } else {
                     removedData = p.getData();
                     prev.setNext(p.getNext());
+                    p.setData(null);
                     p.setNext(null);
                     size--;
                     break;
@@ -92,8 +93,9 @@ public class List<T> {
 
     public T removeHead() {
         T removedData = head.getData();
+        head.setData(null);
         head = head.getNext();
-        size --;
+        size--;
         return removedData;
     }
 
@@ -114,11 +116,12 @@ public class List<T> {
     }
 
     public void insertInHead(T data) {
+        size++;
         head = new ListNode<>(data, head);
     }
 
     public void insertByIndex(int index, T data) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new RuntimeException("The value of index is not correct!");
         }
 
@@ -127,17 +130,21 @@ public class List<T> {
             return;
         }
 
-        ListNode<T> prev = head;
-        ListNode<T> p = head.getNext();
+        int i = 1;
 
-        for (int i = 1; i < size; i++) {
+        for (ListNode<T> p = head.getNext(), prev = head; i < size; prev = p, p = p.getNext()) {
             if (i == index) {
-                ListNode<T> t = new ListNode<>(data, p);
+                ListNode<T> t = new ListNode<>(data);
+                if (p == null) {
+                    t.setNext(null);
+                } else {
+                    t.setNext(p);
+                }
                 prev.setNext(t);
+                size++;
                 break;
             } else {
-                prev = p;
-                p = p.getNext();
+                i++;
             }
         }
     }
