@@ -35,6 +35,6 @@ public class ListNode<T> {
             return "Node is null!";
         }
 
-        return "Node :[DATA: " + data + ", NEXT: " + next + "]";
+        return "Node :[DATA: " + data + ", NEXT: " + next.getData() + "]";
     }
 }
