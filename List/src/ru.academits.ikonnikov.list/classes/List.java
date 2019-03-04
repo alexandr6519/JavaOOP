@@ -1,5 +1,7 @@
 package ru.academits.ikonnikov.list.classes;
 
+import ru.academits.ikonnikov.list.node.ListNode;
+
 public class List<T> {
     private ListNode<T> head;
     private int size;
@@ -45,7 +47,7 @@ public class List<T> {
     }
 
     public T setData(int index, T data) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new RuntimeException("The setting of data is impossible, because the value of index is not correct!");
         }
 
@@ -121,7 +123,7 @@ public class List<T> {
     }
 
     public void insertByIndex(int index, T data) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new RuntimeException("The value of index is not correct!");
         }
 
@@ -134,6 +136,7 @@ public class List<T> {
 
         for (ListNode<T> p = head.getNext(), prev = head; i < size; prev = p, p = p.getNext()) {
             if (i == index) {
+                size++;
                 ListNode<T> t = new ListNode<>(data);
                 if (p == null) {
                     t.setNext(null);
@@ -141,7 +144,6 @@ public class List<T> {
                     t.setNext(p);
                 }
                 prev.setNext(t);
-                size++;
                 break;
             } else {
                 i++;
@@ -165,13 +167,15 @@ public class List<T> {
     }
 
     public List copy() {
-        ListNode<T> copyHead = new ListNode<>(head.getData());
-        List<T> copy = new List<>(copyHead, size);
+        ListNode<T> copyHead = new ListNode<>(this.head.getData());
+        List<T> copy = new List<>(copyHead, 1);
 
         int i = 1;
 
-        for (ListNode<T> p = head.getNext(); p != null; p = p.getNext()) {
+        for (ListNode<T> p = this.head.getNext(); p != null; p = p.getNext()) {
+            copy.size++;
             copy.insertByIndex(i, p.getData());
+            copy.size--;
             i++;
         }
         return copy;
@@ -179,6 +183,9 @@ public class List<T> {
 
     @Override
     public String toString() {
+        if (this.head == null || size == 0) {
+            throw new NullPointerException("This list is empty!");
+        }
         int size = this.size;
         StringBuilder result = new StringBuilder("[");
 
