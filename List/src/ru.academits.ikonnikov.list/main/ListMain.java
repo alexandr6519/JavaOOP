@@ -1,7 +1,7 @@
 package ru.academits.ikonnikov.list.main;
 
 import ru.academits.ikonnikov.list.classes.List;
-import ru.academits.ikonnikov.list.classes.ListNode;
+import ru.academits.ikonnikov.list.node.ListNode;
 
 public class ListMain {
     public static void main(String[] args) {
@@ -12,7 +12,7 @@ public class ListMain {
         list.insertInHead("Good buy");
         list.insertByIndex(1, "Hello");
         list.insertByIndex(2, "Thank you");
-        list.insertByIndex(2, "Please");
+        list.insertByIndex(3, "Please");
         System.out.println("The list is:" + list.toString());
 
         System.out.println("The size of this list is: " + list.getLength());
@@ -20,9 +20,9 @@ public class ListMain {
         System.out.println("The head of list is: " + list.getHead().toString());
 
         System.out.println("The data of head is: " + list.getHeadData());
-
-        System.out.println("The data by index '1' before setting is : " + list.setData(1, "Not"));
-        System.out.println("The list after changing data by index '1' is :" + list.toString());
+        System.out.println("The data by index '4' is : " + list.getData(4));
+        System.out.println("The data by index '4' before setting is : " + list.setData(4, "Not"));
+        System.out.println("The list after changing data by index '4' is :" + list.toString());
 
         System.out.println("The data by index '2' is: " + list.getData(2));
 
