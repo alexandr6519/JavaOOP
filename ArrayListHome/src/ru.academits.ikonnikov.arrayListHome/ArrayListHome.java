@@ -39,7 +39,7 @@ public class ArrayListHome {
 
         for (Integer integer : numbers2) {
             if (!numbersNoRepeats.contains(integer)) {
-                    numbersNoRepeats.add(integer);
+                numbersNoRepeats.add(integer);
             }
         }
         System.out.println(numbersNoRepeats);
