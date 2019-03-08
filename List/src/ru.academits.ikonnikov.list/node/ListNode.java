@@ -9,11 +9,17 @@ public class ListNode<T> {
     }
 
     public ListNode(T data, ListNode<T> next) {
+        if (data == null && next == null) {
+            throw new IllegalArgumentException("It's impossible to create empty node!");
+        }
         this.data = data;
         this.next = next;
     }
 
     public ListNode<T> getNext() {
+        if (next == null) {
+            return null;
+        }
         return next;
     }
 
@@ -22,6 +28,9 @@ public class ListNode<T> {
     }
 
     public T getData() {
+        if (data == null) {
+            throw new NullPointerException("The data is null!");
+        }
         return data;
     }
 
@@ -31,8 +40,8 @@ public class ListNode<T> {
 
     @Override
     public String toString() {
-        if (this.getData() == null) {
-            return "Node is null!";
+        if (data == null) {
+            return "Node is null.";
         }
         if (next == null) {
             return "Node :[DATA: " + data + ", NEXT: NULL" + "]";
