@@ -8,7 +8,7 @@ public class ListMain {
 
         list.insertInHead("Good buy");
         list.insertByIndex(1, "Hello");
-        list.insertByIndex(2, "Thank you");
+        list.insertByIndex(2, "null");
         list.insertByIndex(3,"Please");
        System.out.println("The list is: " + list.toString());
 
@@ -38,6 +38,10 @@ public class ListMain {
         System.out.println("The data of removing 'head' is: " + list.removeHead());
         System.out.println("The list after removing 'head' is : " + list.toString());
 
-        System.out.println("The copy of list is: " + list.copy().toString());
+        list.insertByIndex(1,"null");
+        System.out.println("The list after inserting 'null' by index '1' is : " + list.toString());
+
+        System.out.println("The result of removing by data 'null' is: " + list.removeNodeByValue("null"));
+        System.out.println("The list after removing by data 'null' is :" + list.toString());
     }
 }
