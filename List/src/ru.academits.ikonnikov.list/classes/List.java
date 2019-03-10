@@ -7,8 +7,8 @@ public class List<T> {
     private int size;
 
     public List(T head, int size) {
-        if (head == null) {
-            throw new NullPointerException("The head must not be null!");
+        if (head == null || size < 1) {
+            throw new NullPointerException("The head must not be null and size must be > 0!");
         }
 
         this.head = new ListNode<>(head);
@@ -20,7 +20,7 @@ public class List<T> {
     }
 
     public T getHeadData() {
-        if (head == null) {
+        if (head == null || size == 0) {
             throw new NullPointerException("The list is empty!");
         }
         return head.getData();
@@ -91,13 +91,19 @@ public class List<T> {
         int i = 0;
 
         for (ListNode<T> p = head; p != null; p = p.getNext()) {
-            if (p.getData().equals(data)) {
-                wasDelete = true;
-                removeNode(i);
-                break;
+            if (data == null) {
+                if (p.getData() == null) {
+                    removeNode(i);
+                    return true;
+                }
             } else {
-                i++;
+                if (p.getData().equals(data)) {
+                    wasDelete = true;
+                    removeNode(i);
+                    break;
+                }
             }
+            i++;
         }
         return wasDelete;
     }
