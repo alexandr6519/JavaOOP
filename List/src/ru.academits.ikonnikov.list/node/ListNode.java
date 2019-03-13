@@ -1,5 +1,7 @@
 package ru.academits.ikonnikov.list.node;
 
+import java.util.Objects;
+
 public class ListNode<T> {
     private T data;
     private ListNode<T> next;
@@ -14,9 +16,6 @@ public class ListNode<T> {
     }
 
     public ListNode<T> getNext() {
-        if (next == null) {
-            return null;
-        }
         return next;
     }
 
@@ -25,6 +24,9 @@ public class ListNode<T> {
     }
 
     public T getData() {
+        if (Objects.equals(data, null)) {
+            return null;
+        }
         return data;
     }
 
