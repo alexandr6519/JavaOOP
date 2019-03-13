@@ -4,21 +4,23 @@ import ru.academits.ikonnikov.list.classes.List;
 
 public class ListMain {
     public static void main(String[] args) {
-        List<String> list = new List<>("Yes", 1);
+        List<String> listEmpty = new List<>();
+       // System.out.println("The listEmpty is: " + listEmpty.toString());
 
+        List<String> list = new List<>("Not");
         list.insertInHead("Good buy");
         list.insertByIndex(1, "Hello");
         list.insertByIndex(2, "null");
-        list.insertByIndex(3,"Please");
-       System.out.println("The list is: " + list.toString());
+        list.insertByIndex(4,"Please");
+        System.out.println("The list is: " + list.toString());
 
         System.out.println("The size of this list is: " + list.getLength());
 
         System.out.println("The data of head is: " + list.getHeadData());
 
         System.out.println("The data by index '1' is : " + list.getData(1));
-        System.out.println("The data by index '4' before setting is : " + list.setData(4, "Not"));
-        System.out.println("The list after changing data by index '4' is : " + list.toString());
+        System.out.println("The data by index '3' before setting is : " + list.setData(3, "Yes"));
+        System.out.println("The list after changing data by index '3' is : " + list.toString());
 
         List<String> list1 = list.copy();
         System.out.println("The copy of list is: " + list1.toString());
@@ -43,5 +45,13 @@ public class ListMain {
 
         System.out.println("The result of removing by data 'null' is: " + list.removeNodeByValue("null"));
         System.out.println("The list after removing by data 'null' is :" + list.toString());
+
+        list.turn();
+        System.out.println("The list after turning is : " + list.toString());
+
+        listEmpty.turn();
+        System.out.println("The listEmpty after turning is: " + listEmpty.toString());
+
+        System.out.println("The copy of listEmpty is: " + listEmpty.copy().toString());
     }
 }
