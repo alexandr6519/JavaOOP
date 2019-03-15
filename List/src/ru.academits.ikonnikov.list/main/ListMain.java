@@ -5,7 +5,7 @@ import ru.academits.ikonnikov.list.classes.List;
 public class ListMain {
     public static void main(String[] args) {
         List<String> listEmpty = new List<>();
-       // System.out.println("The listEmpty is: " + listEmpty.toString());
+        System.out.println("The listEmpty is: " + listEmpty.toString());
 
         List<String> list = new List<>("Not");
         list.insertInHead("Good buy");
@@ -45,12 +45,13 @@ public class ListMain {
 
         System.out.println("The result of removing by data 'null' is: " + list.removeNodeByValue("null"));
         System.out.println("The list after removing by data 'null' is :" + list.toString());
-
+        System.out.println("The copy of list is: " + list.copy().toString());
         list.turn();
         System.out.println("The list after turning is : " + list.toString());
 
         listEmpty.turn();
         System.out.println("The listEmpty after turning is: " + listEmpty.toString());
+
 
         System.out.println("The copy of listEmpty is: " + listEmpty.copy().toString());
     }
