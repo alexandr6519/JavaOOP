@@ -6,6 +6,10 @@ public class ListNode<T> {
     private T data;
     private ListNode<T> next;
 
+    public ListNode() {
+        this.data = null;
+    }
+
     public ListNode(T data) {
         this.data = data;
     }
@@ -24,9 +28,6 @@ public class ListNode<T> {
     }
 
     public T getData() {
-        if (Objects.equals(data, null)) {
-            return null;
-        }
         return data;
     }
 
