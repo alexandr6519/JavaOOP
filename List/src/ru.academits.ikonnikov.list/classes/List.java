@@ -9,9 +9,6 @@ public class List<T> {
     private int size;
 
     public List(T head) {
-        if (Objects.equals(head, null)) {
-            throw new NullPointerException("The head must not be null!");
-        }
         size = 1;
         this.head = new ListNode<>(head);
     }
@@ -26,7 +23,7 @@ public class List<T> {
     }
 
     public T getHeadData() {
-        if (Objects.equals(head, null)) {
+        if (head == null) {
             throw new NullPointerException("The list is empty!");
         }
         return head.getData();
@@ -43,9 +40,8 @@ public class List<T> {
             if (i == index) {
                 t = p;
                 break;
-            } else {
-                i++;
             }
+            i++;
         }
         return t;
     }
@@ -53,9 +49,6 @@ public class List<T> {
     public T getData(int index) {
         ListNode<T> currentNode = findByIndex(index);
 
-        if (Objects.equals(currentNode, null)) {
-            return null;
-        }
         return currentNode.getData();
     }
 
@@ -77,13 +70,9 @@ public class List<T> {
         }
         ListNode<T> previousNode = findByIndex(index - 1);
         ListNode<T> currentNode = previousNode.getNext();
-        T removedData = null;
-        previousNode.setNext(null);
+        T removedData = currentNode.getData();
+        previousNode.setNext(currentNode.getNext());
 
-        if (!Objects.equals(currentNode, null)) {
-            removedData = currentNode.getData();
-            previousNode.setNext(currentNode.getNext());
-        }
         currentNode.setNext(null);
         size--;
 
@@ -106,17 +95,10 @@ public class List<T> {
         int i = 0;
 
         for (ListNode<T> p = head; p != null; p = p.getNext()) {
-            if (Objects.equals(data, null)) {
-                if (Objects.equals(p.getData(), null)) {
-                    removeNode(i);
-                    return true;
-                }
-            } else {
-                if (Objects.equals(p.getData(), data)) {
-                    wasDelete = true;
-                    removeNode(i);
-                    break;
-                }
+            if (Objects.equals(p.getData(), data)) {
+                wasDelete = true;
+                removeNode(i);
+                break;
             }
             i++;
         }
@@ -148,36 +130,18 @@ public class List<T> {
         if (size < 2) {
             return;
         }
-        ListNode<T> prevNode = head, currentNode = head.getNext(), nextNode = null;
-
-        if (size > 2) {
-            nextNode = currentNode.getNext();
-        }
+        ListNode<T> prevNode = head, currentNode = head.getNext(), nextNode = currentNode.getNext();
 
         for (int i = 1; i < size; i++) {
             prevNode.setNext(nextNode);
-
-            if (Objects.equals(currentNode, null)) {
-                throw new NullPointerException("The currentNode is null!");
-            } else {
-                currentNode.setNext(head);
-            }
+            currentNode.setNext(head);
             head = currentNode;
-
-            if (size == 2) {
-                break;
-            }
             currentNode = nextNode;
 
-            if (i < size - 2) {
-                if (Objects.equals(currentNode, null)) {
-                    throw new NullPointerException("The currentNode is null!");
-                } else {
-                    nextNode = currentNode.getNext();
-                }
-            } else {
-                nextNode = null;
+            if (i == size - 1) {
+                break;
             }
+            nextNode = currentNode.getNext();
         }
     }
 
@@ -185,16 +149,22 @@ public class List<T> {
         if (size == 0) {
             return this;
         }
-        this.turn();
-        ListNode<T> copyHead = new ListNode<>(head.getData());
-        List<T> copy = new List<T>(copyHead.getData());
+        List<T> copy = new List<>(head.getData());
+
+        if (size == 1) {
+            return copy;
+        }
+        ListNode<T> copyPreviousNode = copy.head;
         ListNode<T> nextNode = head.getNext();
 
         for (int i = 1; i < this.size; i++) {
-            copy.insertInHead(nextNode.getData());
+            copy.size++;
+            ListNode<T> copyCurrentNode = new ListNode<>(nextNode.getData());
+            copyPreviousNode.setNext(copyCurrentNode);
             nextNode = nextNode.getNext();
+            copyPreviousNode = copyCurrentNode;
         }
-        this.turn();
+
         return copy;
     }
 
@@ -203,14 +173,14 @@ public class List<T> {
         if (size == 0) {
             return "[ ]";
         }
-        int size = this.size;
+
         StringBuilder result = new StringBuilder("[");
 
-        for (int i = 0; i < (size - 1); i++) {
+        for (int i = 0; i < (this.size - 1); i++) {
             String str = String.format(" %s ,", this.getData(i));
             result.append(str);
         }
-        String str = String.format(" %s ]", this.getData(size - 1));
+        String str = String.format(" %s ]", this.getData(this.size - 1));
         return result.append(str).toString();
     }
 }
