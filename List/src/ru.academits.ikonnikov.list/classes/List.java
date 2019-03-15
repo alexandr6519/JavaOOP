@@ -80,7 +80,7 @@ public class List<T> {
     }
 
     public T removeHead() {
-        if (Objects.equals(head, null)) {
+        if (head == null) {
             throw new NullPointerException("The list is empty!");
         }
         T removedData = head.getData();
