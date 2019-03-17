@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-//import java.util.Objects;
 
 public class MainArrayList {
     public static void main(String[] args) {
@@ -74,8 +73,6 @@ public class MainArrayList {
 
         Object[] arrayListToArrayObject = myListIntegers.toArray();
         System.out.print("The result of method 'myListIntegers.toArray()' is : {");
-
-
 
         for (int i = 0; i < arrayListToArrayObject.length - 1; i++) {
                 System.out.print(arrayListToArrayObject[i] + ", ");
