@@ -90,10 +90,13 @@ public class List<T> {
     }
 
     public boolean removeNodeByValue(T data) {
-        if (Objects.equals(head.getData(), data)) {
-            return Objects.equals(removeHead(), data);
+        if (size == 0) {
+            return false;
         }
-        boolean wasDelete = false;
+        if (Objects.equals(head.getData(), data)) {
+            removeHead();
+            return true;
+        }
 
         for (ListNode<T> p = head.getNext(), prev = head; p.getNext() != null; prev = p, p = p.getNext()) {
             if (Objects.equals(p.getData(), data)) {
@@ -103,7 +106,7 @@ public class List<T> {
                 return true;
             }
         }
-        return wasDelete;
+        return false;
     }
 
     public void insertInHead(T data) {
