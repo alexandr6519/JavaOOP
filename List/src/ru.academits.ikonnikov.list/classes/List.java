@@ -64,15 +64,14 @@ public class List<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The removing of node is impossible, because the value of index is not correct!");
         }
-
         if (index == 0) {
             return removeHead();
         }
         ListNode<T> previousNode = findByIndex(index - 1);
         ListNode<T> currentNode = previousNode.getNext();
+
         T removedData = currentNode.getData();
         previousNode.setNext(currentNode.getNext());
-
         currentNode.setNext(null);
         size--;
 
@@ -91,16 +90,18 @@ public class List<T> {
     }
 
     public boolean removeNodeByValue(T data) {
+        if (Objects.equals(head.getData(), data)) {
+            return Objects.equals(removeHead(), data);
+        }
         boolean wasDelete = false;
-        int i = 0;
 
-        for (ListNode<T> p = head; p != null; p = p.getNext()) {
+        for (ListNode<T> p = head.getNext(), prev = head; p.getNext() != null; prev = p, p = p.getNext()) {
             if (Objects.equals(p.getData(), data)) {
-                wasDelete = true;
-                removeNode(i);
-                break;
+                prev.setNext(p.getNext());
+                p.setNext(null);
+                size--;
+                return true;
             }
-            i++;
         }
         return wasDelete;
     }
@@ -130,7 +131,9 @@ public class List<T> {
         if (size < 2) {
             return;
         }
-        ListNode<T> prevNode = head, currentNode = head.getNext(), nextNode = currentNode.getNext();
+        ListNode<T> prevNode = head;
+        ListNode<T> currentNode = head.getNext();
+        ListNode<T> nextNode = currentNode.getNext();
 
         for (int i = 1; i < size; i++) {
             prevNode.setNext(nextNode);
@@ -147,7 +150,7 @@ public class List<T> {
 
     public List<T> copy() {
         if (size == 0) {
-            return this;
+            return new List<>();
         }
         List<T> copy = new List<>(head.getData());
 
@@ -156,15 +159,14 @@ public class List<T> {
         }
         ListNode<T> copyPreviousNode = copy.head;
         ListNode<T> nextNode = head.getNext();
+        copy.size = this.size;
 
         for (int i = 1; i < this.size; i++) {
-            copy.size++;
             ListNode<T> copyCurrentNode = new ListNode<>(nextNode.getData());
             copyPreviousNode.setNext(copyCurrentNode);
             nextNode = nextNode.getNext();
             copyPreviousNode = copyCurrentNode;
         }
-
         return copy;
     }
 
@@ -173,14 +175,15 @@ public class List<T> {
         if (size == 0) {
             return "[ ]";
         }
-
         StringBuilder result = new StringBuilder("[");
+        ListNode<T> currentNode = head;
 
-        for (int i = 0; i < (this.size - 1); i++) {
-            String str = String.format(" %s ,", this.getData(i));
+        for (int i = 0; i < (size - 1); i++) {
+            String str = String.format(" %s ,", currentNode.getData());
+            currentNode = currentNode.getNext();
             result.append(str);
         }
-        String str = String.format(" %s ]", this.getData(this.size - 1));
+        String str = String.format(" %s ]", currentNode.getData());
         return result.append(str).toString();
     }
 }
