@@ -98,7 +98,7 @@ public class List<T> {
             return true;
         }
 
-        for (ListNode<T> p = head.getNext(), prev = head; p.getNext() != null; prev = p, p = p.getNext()) {
+        for (ListNode<T> p = head.getNext(), prev = head; p != null; prev = p, p = p.getNext()) {
             if (Objects.equals(p.getData(), data)) {
                 prev.setNext(p.getNext());
                 p.setNext(null);
