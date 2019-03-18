@@ -6,10 +6,6 @@ public class ListNode<T> {
     private T data;
     private ListNode<T> next;
 
-    public ListNode() {
-        this.data = null;
-    }
-
     public ListNode(T data) {
         this.data = data;
     }
