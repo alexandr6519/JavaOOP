@@ -6,6 +6,9 @@ public class ListMain {
     public static void main(String[] args) {
         List<String> listEmpty = new List<>();
         System.out.println("The listEmpty is: " + listEmpty.toString());
+        listEmpty.turn();
+        System.out.println("The listEmpty after turning is: " + listEmpty.toString());
+        System.out.println("The copy of listEmpty is: " + listEmpty.copy().toString());
 
         List<String> list = new List<>("Not");
         list.insertInHead("Good buy");
@@ -19,8 +22,8 @@ public class ListMain {
         System.out.println("The data of head is: " + list.getHeadData());
 
         System.out.println("The data by index '1' is : " + list.getData(1));
-        System.out.println("The data by index '3' before setting is : " + list.setData(3, "Yes"));
-        System.out.println("The list after changing data by index '3' is : " + list.toString());
+        System.out.println("The data by index '3' before setting data 'Yes' is : " + list.setData(3, "Yes"));
+        System.out.println("The list after setting data 'Yes' by index '3' is : " + list.toString());
 
         List<String> list1 = list.copy();
         System.out.println("The copy of list is: " + list1.toString());
@@ -49,10 +52,6 @@ public class ListMain {
         list.turn();
         System.out.println("The list after turning is : " + list.toString());
 
-        listEmpty.turn();
-        System.out.println("The listEmpty after turning is: " + listEmpty.toString());
 
-
-        System.out.println("The copy of listEmpty is: " + listEmpty.copy().toString());
     }
 }
