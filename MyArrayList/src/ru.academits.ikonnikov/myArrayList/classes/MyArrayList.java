@@ -1,4 +1,4 @@
-package ru.academits.ikonnikov.myArrayList.classes;
+package ru.academits.ikonnikov.list.classes;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -15,23 +15,22 @@ public class MyArrayList<T> implements List<T> {
     private int modCount = 0;
 
     public MyArrayList(int capacity) {
-        size = capacity;
         //noinspection unchecked
         this.items = (T[]) new Object[capacity];
+        size = 0;
     }
 
     public MyArrayList(T[] array) {
-        items = array;
         size = array.length;
+        //noinspection unchecked
+        items = (T[]) new Object[size];
+        System.arraycopy(array, 0, items, 0, size);
     }
 
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The getting of item is impossible, because the value of index is not correct!");
-        }
-        if (Objects.equals(items[index], null)) {
-            return null;
         }
         return items[index];
     }
@@ -49,7 +48,6 @@ public class MyArrayList<T> implements List<T> {
 
     private void ensureCapacity(int capacity) {
         if (size < capacity) {
-            size = capacity;
             this.items = Arrays.copyOf(items, capacity);
         }
     }
@@ -67,7 +65,7 @@ public class MyArrayList<T> implements List<T> {
 
     private class MyListIterator implements Iterator<T> {
         private int currentIndex = -1;
-        int mCount = modCount;
+        private int modCountCurrent = modCount;
 
         public boolean hasNext() {
             return currentIndex + 1 < size;
@@ -78,16 +76,12 @@ public class MyArrayList<T> implements List<T> {
             if (!hasNext()) {
                 throw new NoSuchElementException("The next element is absent!");
             }
-            if (mCount != modCount) {
+            if (modCountCurrent != modCount) {
                 throw new ConcurrentModificationException("There was adding or removing elements!");
             }
             currentIndex++;
-            T currentItem = items[currentIndex];
 
-            if (currentItem == null) {
-                return null;
-            }
-            return currentItem;
+            return items[currentIndex];
         }
     }
 
@@ -98,26 +92,17 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        if (size == 0) {
-            throw new NullPointerException("This list is empty!");
-        }
-        Object[] object = new Object[size];
-
-        for (int i = 0; i < size; i++) {
-            object[i] = (Object)items[i];
-        }
-        return object;
+        return Arrays.copyOf(items,  size);
     }
 
     @Override
-    public <T> T[] toArray(T[] array) {
+    public <V> V[] toArray(V[] array) {
         if (array.length < size) {
-            //noinspection unchecked
-            array = (T[]) new MyArrayList<>(size).items;
+            array = Arrays.copyOf(array, size);
         }
         for (int i = 0; i < size; i++) {
             //noinspection unchecked
-            array[i] = (T)items[i];
+            array[i] = (V)items[i];
         }
         return array;
     }
@@ -129,15 +114,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean contains(Object object) {
-        //noinspection unchecked
-        T item = (T) object;
-
-        for (T itemCurrent : this) {
-            if (Objects.equals(itemCurrent, item)) {
-                return true;
-            }
-        }
-        return false;
+        return this.indexOf(object) > -1;
     }
 
     @Override
@@ -145,21 +122,19 @@ public class MyArrayList<T> implements List<T> {
         if (c == null) {
             throw new IllegalArgumentException("This collection is null!");
         }
-        boolean isContainsAll = true;
 
         for (Object cItem : c) {
-            isContainsAll = isContainsAll && this.contains(cItem);
+           if (this.indexOf(cItem) == -1) {
+               return false;
+           }
         }
-        return isContainsAll;
+        return true;
     }
 
     @Override
     public int indexOf(Object object) {
-        //noinspection unchecked
-        T item = (T) object;
-
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(items[i], item)) {
+            if (Objects.equals(items[i], object)) {
                 return i;
             }
         }
@@ -168,62 +143,68 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int lastIndexOf(Object object) {
-        //noinspection unchecked
-        T item = (T) object;
-        int index = -1;
-
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(items[i], item)) {
-                index = i;
+        for (int i = 1; i <= size; i++) {
+            if (Objects.equals(items[size - i], object)) {
+                return (size - i);
             }
         }
-        return index;
+        return -1;
     }
 
     @Override
     public boolean add(T t) {
         ensureCapacity(size + 1);
+        size++;
+        items[size - 1] = t;
         modCount++;
-        set(size - 1, t);
         return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        boolean wasAddedAll = true;
+        if (c == null) {
+            throw new IllegalArgumentException("This collection is null!");
+        }
+        int indexForAdd = size;
+        ensureCapacity(size + c.size());
+        size += c.size();
 
         for (T cItem : c) {
-            wasAddedAll = wasAddedAll && add(cItem);
+           items[indexForAdd] = cItem;
+           indexForAdd++;
         }
-        return wasAddedAll;
+        return this.containsAll(c);
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
-        boolean wasAddedAll = false;
-
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("The getting of item is impossible, because the value of index is not correct!");
+        if (c == null) {
+            throw new IllegalArgumentException("This collection is null!");
         }
-        wasAddedAll = true;
-        ensureCapacity(size + c.size());
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("The adding of collection is impossible, because the value of index is not correct!");
+        }
+        ensureCapacity(this.size + c.size());
+        this.size += c.size();
         System.arraycopy(items, index, items, index + c.size(), this.size() - index - c.size());
 
-        for (Object cItem : c) {
-            //noinspection unchecked
-            T item = (T) cItem;
-            wasAddedAll = wasAddedAll && !Objects.equals(set(index, item), null);
+        for (T cItem : c) {
+            items[index] = cItem;
+            modCount++;
             index++;
         }
-        return wasAddedAll;
+        return this.containsAll(c);
     }
 
     @Override
     public void add(int index, T element) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("The adding of item is impossible, because the value of index is not correct!");
         }
-
+        if (index == size) {
+            add(element);
+            return;
+        }
         System.arraycopy(items, index, items, index + 1, size - index - 1);
         this.items[index] = element;
         modCount++;
@@ -231,11 +212,8 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean remove(Object object) {
-        //noinspection unchecked
-        T item = (T) object;
-
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(items[i], item)) {
+            if (Objects.equals(items[i], object)) {
                 remove(i);
                 return true;
             }
@@ -262,26 +240,28 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public boolean removeAll(Collection<?> c) {
         if (c == null) {
-            return false;
+            throw new IllegalArgumentException("This collection is null!");
         }
-        boolean wasRemovedAll = true;
 
-        for (Object cItem : c) {
-            wasRemovedAll = wasRemovedAll && remove(cItem);
+        for (int i = 0; i < size; i++) {
+            if (c.contains(items[i])) {
+                remove(i);
+                i--;
+            }
         }
-        this.trimToSize();
-        return wasRemovedAll;
+        return !this.containsAll(c);
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        boolean wasRetainedAll = false;
+        if (c == null) {
+            throw new IllegalArgumentException("This collection is null!");
+        }
+        boolean wasRetainedAll = true;
 
         for (int i = 0; i < size; i++) {
-            boolean needDelete = !c.contains(items[i]);
-            if (needDelete) {
-                T r = remove(i);
-                wasRetainedAll = wasRetainedAll || Objects.equals(r, items[i]);
+            if (!c.contains(items[i])) {
+                wasRetainedAll = wasRetainedAll && !this.contains(remove(i));
                 i--;
             }
         }
@@ -290,6 +270,10 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public void clear() {
+        if (size == 0) {
+            return;
+        }
+
         for (int i = 0; i < size; i++) {
             items[i] = null;
         }
@@ -304,10 +288,10 @@ public class MyArrayList<T> implements List<T> {
         StringBuilder result = new StringBuilder("{");
 
         for (int i = 0; i < (size - 1); i++) {
-            String str = String.format(" %s ,", this.get(i));
+            String str = String.format(" %s ,", items[i]);
             result.append(str);
         }
-        String str = String.format(" %s }", this.get(size - 1));
+        String str = String.format(" %s }", items[size - 1]);
         return result.append(str).toString();
     }
 
