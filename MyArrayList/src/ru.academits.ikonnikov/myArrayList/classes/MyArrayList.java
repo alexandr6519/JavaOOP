@@ -1,4 +1,4 @@
-package ru.academits.ikonnikov.list.classes;
+package ru.academits.ikonnikov.myArrayList.classes;
 
 import java.util.Arrays;
 import java.util.Objects;
