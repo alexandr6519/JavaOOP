@@ -14,6 +14,8 @@ public class MainArrayList {
         System.out.println("The length of myListStringsEmpty.toArray()is: " + myListStringsEmpty.toArray().length);
         myListStringsEmpty.clear();
         System.out.println("The myListStringsEmpty after clearing is: " + myListStringsEmpty.toString());
+        myListStringsEmpty.ensureCapacity(10);
+        System.out.println("The myListStringsEmpty is: " + myListStringsEmpty.toString());
         System.out.println();
 
         Integer[] arrayIntegers = {0, 1, 2, null, 4, 5, 6};
@@ -41,7 +43,7 @@ public class MainArrayList {
         System.out.println("The result of method 'lastIndexOf(1)' of myListIntegers is: " + myListIntegers.lastIndexOf(1));
         System.out.println("The result of method 'lastIndexOf(0)' of myListIntegers is: " + myListIntegers.lastIndexOf(0));
 
-        Integer[] arrayForIntegers = new Integer[0];
+        Integer[] arrayForIntegers = new Integer[10];
         Integer[] arrayListToArrayInt = myListIntegers.toArray(arrayForIntegers);
 
         System.out.print("The array of method 'myListIntegers.toArray(arrayForIntegers)' is : (");
@@ -56,7 +58,7 @@ public class MainArrayList {
         MyArrayList<String> myListStrings = new MyArrayList<>(arrayStrings);
         System.out.println("The myListStrings  is : " + myListStrings.toString());
         System.out.println("The pastData of setting data 'k' to myListStrings  by index '1' is: " + myListStrings.set(1, "k"));
-        System.out.println("The item of myListStrings by index '2' in  is: " + myListStrings.get(2));
+        System.out.println("The item of myListStrings by index '2' is: " + myListStrings.get(2));
 
         System.out.println("The result of adding data 'f' to myListStrings  is : " + myListStrings.add("f"));
         System.out.println("The myListStrings  after adding data 'f' is : " + myListStrings.toString());
@@ -107,10 +109,17 @@ public class MainArrayList {
         System.out.println("The myListStringCopy is : " + myListStringsCopy.toString());
         myListStringsCopy.clear();
         System.out.println("The myListStringsCopy result after clearing is : " + myListStringsCopy.toString());
-        System.out.println("The result of checking on emptiness of myListStringsCopy  is : " + myListStringsCopy.isEmpty());
+
+        if (myListStringsCopy.isEmpty()) {
+            System.out.println("Now myListStringsCopy is empty.");
+        } else {
+            System.out.println("Now myListStringsCopy is not empty.");
+        }
+        System.out.println();
 
         List<Short> collection3 = new ArrayList<>(Arrays.asList((short)14, (short)16, (short)18));
-        MyArrayList<Short> myListShorts = new MyArrayList<>(6);
+        List<Short> collection4 = new ArrayList<>(Arrays.asList((short)11, (short)16, (short)20));
+        MyArrayList<Short> myListShorts = new MyArrayList<>(10);
         System.out.println("The size of myListShorts = " + myListShorts.size());
         myListShorts.add(0, (short) 11);
         myListShorts.add(1, (short) 22);
@@ -131,8 +140,8 @@ public class MainArrayList {
             System.out.println("The myListShorts has not item '11'.");
         }
 
-        if (myListShorts.retainAll(collection3)) {
-            System.out.println("The myListShorts after using method 'retainAll' by collection {'14','16','18'} is : " + myListShorts.toString());
+        if (myListShorts.retainAll(collection4)) {
+            System.out.println("The myListShorts after using method 'retainAll' by collection {'11','16','20'} is : " + myListShorts.toString());
         }
     }
 }
