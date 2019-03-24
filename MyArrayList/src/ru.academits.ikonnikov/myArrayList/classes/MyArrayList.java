@@ -92,7 +92,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        return Arrays.copyOf(items,  size);
+        return Arrays.copyOf(items, size);
     }
 
     @Override
@@ -102,17 +102,14 @@ public class MyArrayList<T> implements List<T> {
         }
 
         if (array.length < size) {
-            array = Arrays.copyOf(array, size);
+            array = Arrays.copyOf(array, size + 1);
         }
 
-        for (int i = 0; i < array.length; i++) {
-            if (i < size) {
-                //noinspection unchecked
-                array[i] = (V)items[i];
-            } else {
-                array[i] = null;
-            }
+        for (int i = 0; i < size; i++) {
+            //noinspection unchecked
+            array[i] = (V) items[i];
         }
+        array[size] = null;
         return array;
     }
 
@@ -133,9 +130,9 @@ public class MyArrayList<T> implements List<T> {
         }
 
         for (Object cItem : c) {
-           if (!this.contains(cItem)) {
-               return false;
-           }
+            if (!this.contains(cItem)) {
+                return false;
+            }
         }
         return true;
     }
@@ -154,7 +151,7 @@ public class MyArrayList<T> implements List<T> {
     public int lastIndexOf(Object object) {
         for (int i = size - 1; i >= 0; i--) {
             if (Objects.equals(items[i], object)) {
-                return (i);
+                return i;
             }
         }
         return -1;
@@ -162,7 +159,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        ensureCapacity(size + 10);
+        ensureCapacity(size * 2);
         items[size] = t;
         size++;
         modCount++;
@@ -170,22 +167,36 @@ public class MyArrayList<T> implements List<T> {
     }
 
     @Override
+    public void add(int index, T element) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("The adding of item is impossible, because the value of index is not correct!");
+        }
+
+        if (index == size) {
+            add(element);
+            return;
+        }
+        modCount++;
+        System.arraycopy(items, index, items, index + 1, size - index);
+        this.items[index] = element;
+    }
+
+    @Override
     public boolean addAll(Collection<? extends T> c) {
         if (c == null) {
             throw new IllegalArgumentException("This collection is null!");
         }
-        int indexForAdd = size;
-        ensureCapacity(size + c.size());
-        boolean wasAddedAll = true;
+        int indexForAdding = this.size;
+        int sizeBeforeAdding = this.size;
+        ensureCapacity(this.size + c.size());
 
         for (T cItem : c) {
-           items[indexForAdd] = cItem;
-           indexForAdd++;
-           wasAddedAll = wasAddedAll && (items[indexForAdd - 1] == cItem);
+            items[indexForAdding] = cItem;
+            indexForAdding++;
         }
         this.size += c.size();
-        modCount += c.size();
-        return wasAddedAll;
+        modCount++;
+        return this.size == c.size() + sizeBeforeAdding;
     }
 
     @Override
@@ -199,33 +210,17 @@ public class MyArrayList<T> implements List<T> {
         if (index == size) {
             return this.addAll(c);
         }
+        int sizeBeforeAdding = this.size;
         ensureCapacity(this.size + c.size());
-        System.arraycopy(items, index, items, index + c.size(), this.size() - index);
-        boolean wasAddedAll = true;
+        System.arraycopy(items, index, items, index + c.size(), this.size - index);
 
         for (T cItem : c) {
             items[index] = cItem;
             index++;
-            wasAddedAll = wasAddedAll && (items[index - 1] == cItem);
         }
         this.size += c.size();
-        modCount += c.size();
-        return wasAddedAll;
-    }
-
-    @Override
-    public void add(int index, T element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("The adding of item is impossible, because the value of index is not correct!");
-        }
         modCount++;
-
-        if (index == size) {
-            add(element);
-            return;
-        }
-        System.arraycopy(items, index, items, index + 1, size - index - 1);
-        this.items[index] = element;
+        return this.size == c.size() + sizeBeforeAdding;
     }
 
     @Override
@@ -260,16 +255,17 @@ public class MyArrayList<T> implements List<T> {
         if (c == null) {
             throw new IllegalArgumentException("This collection is null!");
         }
-        boolean wasRemovedAll = true;
+        int sizeBeforeRemoving = this.size;
+        int removingCount = 0;
 
         for (int i = 0; i < size; i++) {
             if (c.contains(items[i])) {
-                T removedItem = remove(i);
-                wasRemovedAll = wasRemovedAll && (removedItem != items[i]);
+                remove(i);
+                removingCount++;
                 i--;
             }
         }
-        return wasRemovedAll;
+        return this.size == sizeBeforeRemoving - removingCount;
     }
 
     @Override
@@ -298,7 +294,7 @@ public class MyArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             items[i] = null;
         }
-        modCount += size;
+        modCount++;
         size = 0;
     }
 
