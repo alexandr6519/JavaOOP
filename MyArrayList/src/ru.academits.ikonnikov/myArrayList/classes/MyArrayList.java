@@ -23,7 +23,7 @@ public class MyArrayList<T> implements List<T> {
     public MyArrayList(T[] array) {
         size = array.length;
         //noinspection unchecked
-        items = (T[]) new Object[size * 2];
+        items = (T[]) new Object[size + 10];
         System.arraycopy(array, 0, items, 0, size);
     }
 
@@ -101,15 +101,18 @@ public class MyArrayList<T> implements List<T> {
             throw new IllegalArgumentException("This array is null!");
         }
 
-        if (array.length <= size) {
-            array = Arrays.copyOf(array, size + 1);
+        if (array.length < size) {
+            //noinspection unchecked
+            array = (V[]) Arrays.copyOf(array, size, array.getClass());
         }
 
         for (int i = 0; i < size; i++) {
             //noinspection unchecked
             array[i] = (V) items[i];
         }
-        array[size] = null;
+        if (array.length > size) {
+            array[size] = null;
+        }
         return array;
     }
 
@@ -129,11 +132,10 @@ public class MyArrayList<T> implements List<T> {
             throw new IllegalArgumentException("This collection is null!");
         }
 
-        for (Object cItem : c) {
+        for (Object cItem : c)
             if (!this.contains(cItem)) {
                 return false;
             }
-        }
         return true;
     }
 
@@ -159,12 +161,15 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        ensureCapacity(size * 2);
+        if (items.length == size) {
+            ensureCapacity(size * 2);
+        }
         items[size] = t;
         size++;
         modCount++;
         return true;
     }
+
 
     @Override
     public void add(int index, T element) {
@@ -173,11 +178,12 @@ public class MyArrayList<T> implements List<T> {
         }
 
         if (index == size) {
-            add(element);
+            this.add(element);
             return;
         }
         modCount++;
         System.arraycopy(items, index, items, index + 1, size - index);
+        size++;
         this.items[index] = element;
     }
 
@@ -187,16 +193,17 @@ public class MyArrayList<T> implements List<T> {
             throw new IllegalArgumentException("This collection is null!");
         }
         int indexForAdding = this.size;
-        int sizeBeforeAdding = this.size;
+        int addingCount = 0;
         ensureCapacity(this.size + c.size());
 
         for (T cItem : c) {
             items[indexForAdding] = cItem;
             indexForAdding++;
+            addingCount ++;
         }
         this.size += c.size();
         modCount++;
-        return this.size == c.size() + sizeBeforeAdding;
+        return addingCount > 0;
     }
 
     @Override
@@ -210,17 +217,18 @@ public class MyArrayList<T> implements List<T> {
         if (index == size) {
             return this.addAll(c);
         }
-        int sizeBeforeAdding = this.size;
+        int addingCount = 0;
         ensureCapacity(this.size + c.size());
         System.arraycopy(items, index, items, index + c.size(), this.size - index);
 
         for (T cItem : c) {
             items[index] = cItem;
             index++;
+            addingCount ++;
         }
         this.size += c.size();
         modCount++;
-        return this.size == c.size() + sizeBeforeAdding;
+        return addingCount > 0;
     }
 
     @Override
@@ -255,7 +263,6 @@ public class MyArrayList<T> implements List<T> {
         if (c == null) {
             throw new IllegalArgumentException("This collection is null!");
         }
-        int sizeBeforeRemoving = this.size;
         int removingCount = 0;
 
         for (int i = 0; i < size; i++) {
@@ -265,7 +272,7 @@ public class MyArrayList<T> implements List<T> {
                 i--;
             }
         }
-        return this.size == sizeBeforeRemoving - removingCount;
+        return removingCount > 0;
     }
 
     @Override
