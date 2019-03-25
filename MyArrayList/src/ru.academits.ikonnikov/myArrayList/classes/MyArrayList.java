@@ -23,7 +23,7 @@ public class MyArrayList<T> implements List<T> {
     public MyArrayList(T[] array) {
         size = array.length;
         //noinspection unchecked
-        items = (T[]) new Object[size + 10];
+        items = (T[]) new Object[size * 2];
         System.arraycopy(array, 0, items, 0, size);
     }
 
@@ -101,7 +101,7 @@ public class MyArrayList<T> implements List<T> {
             throw new IllegalArgumentException("This array is null!");
         }
 
-        if (array.length < size) {
+        if (array.length <= size) {
             array = Arrays.copyOf(array, size + 1);
         }
 
