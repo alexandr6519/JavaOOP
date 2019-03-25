@@ -43,7 +43,7 @@ public class MainArrayList {
         System.out.println("The result of method 'lastIndexOf(1)' of myListIntegers is: " + myListIntegers.lastIndexOf(1));
         System.out.println("The result of method 'lastIndexOf(0)' of myListIntegers is: " + myListIntegers.lastIndexOf(0));
 
-        Integer[] arrayForIntegers = new Integer[10];
+        Integer[] arrayForIntegers = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
         Integer[] arrayListToArrayInt = myListIntegers.toArray(arrayForIntegers);
 
         System.out.print("The array of method 'myListIntegers.toArray(arrayForIntegers)' is : (");
@@ -60,8 +60,9 @@ public class MainArrayList {
         System.out.println("The pastData of setting data 'k' to myListStrings  by index '1' is: " + myListStrings.set(1, "k"));
         System.out.println("The item of myListStrings by index '2' is: " + myListStrings.get(2));
 
-        System.out.println("The result of adding data 'f' to myListStrings  is : " + myListStrings.add("f"));
-        System.out.println("The myListStrings  after adding data 'f' is : " + myListStrings.toString());
+        myListStrings.add(2, "f");
+        //System.out.println("The result of adding data 'f' to myListStrings  is : " + myListStrings("f"));
+        System.out.println("The myListStrings after adding data 'f' by index '2' is : " + myListStrings.toString());
 
         List<String> collection1 = new ArrayList<>(Arrays.asList("s", "q", "p"));
         System.out.println("The result of adding collection {'s','q','p'} to myListStrings is : " + myListStrings.addAll(collection1));
@@ -122,8 +123,8 @@ public class MainArrayList {
         MyArrayList<Short> myListShorts = new MyArrayList<>(10);
         System.out.println("The size of myListShorts = " + myListShorts.size());
         myListShorts.add(0, (short) 11);
-        myListShorts.add(1, (short) 22);
-        myListShorts.add((short) 33);
+        myListShorts.add(0, (short) 22);
+        myListShorts.add(1, (short) 33);
         myListShorts.addAll(3, collection3);
         System.out.println("The myListShorts after adding items and collection is : " + myListShorts.toString());
         System.out.println("The item of myListShorts by index '5' is: " + myListShorts.get(5));
