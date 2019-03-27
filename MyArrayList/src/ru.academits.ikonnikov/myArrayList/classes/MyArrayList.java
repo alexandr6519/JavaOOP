@@ -1,4 +1,4 @@
-package ru.academits.ikonnikov.myArrayList.classes;
+package ru.academits.ikonnikov.arrayList.classes;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -132,10 +132,11 @@ public class MyArrayList<T> implements List<T> {
             throw new IllegalArgumentException("This collection is null!");
         }
 
-        for (Object cItem : c)
+        for (Object cItem : c) {
             if (!this.contains(cItem)) {
                 return false;
             }
+        }
         return true;
     }
 
@@ -193,17 +194,15 @@ public class MyArrayList<T> implements List<T> {
             throw new IllegalArgumentException("This collection is null!");
         }
         int indexForAdding = this.size;
-        int addingCount = 0;
         ensureCapacity(this.size + c.size());
 
         for (T cItem : c) {
             items[indexForAdding] = cItem;
             indexForAdding++;
-            addingCount ++;
         }
         this.size += c.size();
         modCount++;
-        return addingCount > 0;
+        return c.size() > 0;
     }
 
     @Override
@@ -217,18 +216,17 @@ public class MyArrayList<T> implements List<T> {
         if (index == size) {
             return this.addAll(c);
         }
-        int addingCount = 0;
+
         ensureCapacity(this.size + c.size());
         System.arraycopy(items, index, items, index + c.size(), this.size - index);
 
         for (T cItem : c) {
             items[index] = cItem;
             index++;
-            addingCount ++;
         }
         this.size += c.size();
         modCount++;
-        return addingCount > 0;
+        return c.size() > 0;
     }
 
     @Override
@@ -263,16 +261,16 @@ public class MyArrayList<T> implements List<T> {
         if (c == null) {
             throw new IllegalArgumentException("This collection is null!");
         }
-        int removingCount = 0;
+        boolean wasRemovedAll = false;
 
         for (int i = 0; i < size; i++) {
             if (c.contains(items[i])) {
                 remove(i);
-                removingCount++;
+                wasRemovedAll = true;
                 i--;
             }
         }
-        return removingCount > 0;
+        return wasRemovedAll;
     }
 
     @Override
