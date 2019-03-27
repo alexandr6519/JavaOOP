@@ -201,7 +201,10 @@ public class MyArrayList<T> implements List<T> {
             indexForAdding++;
         }
         this.size += c.size();
-        modCount++;
+
+        if (c.size() > 0) {
+            modCount++;
+        }
         return c.size() > 0;
     }
 
@@ -225,7 +228,10 @@ public class MyArrayList<T> implements List<T> {
             index++;
         }
         this.size += c.size();
-        modCount++;
+
+        if (c.size() > 0) {
+            modCount++;
+        }
         return c.size() > 0;
     }
 
