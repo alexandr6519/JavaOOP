@@ -1,6 +1,6 @@
-package ru.academits.ikonnikov.rangeMain;
+package ru.academits.ikonnikov.range.main;
 
-import ru.academits.ikonnikov.range.Range;
+import ru.academits.ikonnikov.range.classes.Range;
 
 import java.util.Locale;
 import java.util.Scanner;
