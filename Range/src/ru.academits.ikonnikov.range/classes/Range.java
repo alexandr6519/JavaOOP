@@ -1,4 +1,4 @@
-package ru.academits.ikonnikov.range;
+package ru.academits.ikonnikov.range.classes;
 
 import java.lang.IllegalArgumentException;
 
