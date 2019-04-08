@@ -2,10 +2,8 @@ package ru.academits.ikonnikov.hashTable.classes;
 
 import java.util.*;
 
-import ru.academits.ikonnikov.arrayList.classes.MyArrayList;
-
 public class MyHashTable<T> implements Collection<T> {
-    private MyArrayList<T>[] lists;
+    private ArrayList<T>[] lists;
     private int size;
     private int modCount;
 
@@ -14,64 +12,10 @@ public class MyHashTable<T> implements Collection<T> {
             throw new IllegalArgumentException("The capacity must be > 0!");
         }
         //noinspection unchecked
-        this.lists = new MyArrayList[capacity];
+        this.lists = new ArrayList[capacity];
 
-        for (int i = 0; i < capacity; i++) {
-            lists[i] = new MyArrayList<T>(10);
-        }
         this.modCount = 0;
         this.size = 0;
-    }
-
-    public MyHashTable(T[] array, int capacity) {
-        if (capacity < 0) {
-            throw new IllegalArgumentException("The capacity must be > 0!");
-        }
-
-        if (array.length == 0) {
-            throw new IllegalArgumentException("The arrayList is empty!");
-        }
-        //noinspection unchecked
-        this.lists = new MyArrayList[capacity];
-        this.size = array.length;
-
-        for (T item : array) {
-            if (Objects.equals(item, null)) {
-                size--;
-                continue;
-            }
-            int indexObject = calculateIndexObject(item);
-
-            if (lists[indexObject] == null) {
-                lists[indexObject] = new MyArrayList<>(10);
-            }
-            lists[indexObject].add(item);
-        }
-        modCount = 0;
-    }
-
-    public MyHashTable(List<T> list) {
-        if (list.size() == 0) {
-            throw new IllegalArgumentException("The list is empty!");
-        }
-        size = list.size();
-        //noinspection unchecked
-        this.lists = new MyArrayList[size];
-        this.size = list.size();
-
-        for (T item : list) {
-            if (Objects.equals(item, null)) {
-                size--;
-                continue;
-            }
-            int indexObject = calculateIndexObject(item);
-
-            if (lists[indexObject] == null) {
-                lists[indexObject] = new MyArrayList<>(10);
-            }
-            lists[indexObject].add(item);
-        }
-        modCount = 0;
     }
 
     @Override
@@ -84,22 +28,21 @@ public class MyHashTable<T> implements Collection<T> {
         return size == 0;
     }
 
-    private int calculateIndexObject(Object object) {
-        if (Objects.equals(object, null)) {
-            throw new IllegalArgumentException("This object is null!");
-        }
-
+    private int calculateObjectIndex(Object object) {
         if (lists.length == 0) {
             throw new IllegalArgumentException("This hashTable is null!");
+        }
+        if (object == null) {
+            return 0;
         }
         return Math.abs(object.hashCode() % lists.length);
     }
 
     @Override
     public boolean contains(Object object) {
-        int indexObject = calculateIndexObject(object);
+        int indexObject = calculateObjectIndex(object);
 
-        if (Objects.equals(lists[indexObject], null)) {
+        if (lists[indexObject] == null) {
             return false;
         }
         for (T item : lists[indexObject]) {
@@ -112,10 +55,10 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
+        if (c == null) {
+            throw new IllegalArgumentException("This collection is null!");
+        }
         for (Object item : c) {
-            //noinspection unchecked
-            T t = (T) item;
-
             if (!this.contains(item)) {
                 return false;
             }
@@ -125,12 +68,11 @@ public class MyHashTable<T> implements Collection<T> {
 
     @Override
     public boolean add(T t) {
-        if (Objects.equals(t, null)) {
-            throw new IllegalArgumentException("It's impossible to add null!");
-        }
-        int indexObject = calculateIndexObject(t);
+        int indexObject = calculateObjectIndex(t);
+
         if (lists[indexObject] == null) {
-            lists[indexObject] = new MyArrayList<T>(10);
+            int initialListCapacity = 10;
+            lists[indexObject] = new ArrayList<>(initialListCapacity);
         }
         lists[indexObject].add(t);
         modCount++;
@@ -146,21 +88,16 @@ public class MyHashTable<T> implements Collection<T> {
         boolean wasAddAll = false;
 
         for (Object item : c) {
-            if (!Objects.equals(item, null)) {
                 //noinspection unchecked
                 this.add((T) item);
                 wasAddAll = true;
-            }
         }
         return wasAddAll;
     }
 
     @Override
     public boolean remove(Object object) {
-        if (Objects.equals(object, null)) {
-            throw new IllegalArgumentException("This object is null!");
-        }
-        int indexObject = calculateIndexObject(object);
+        int indexObject = calculateObjectIndex(object);
 
         if (lists[indexObject] == null) {
             return false;
@@ -187,7 +124,7 @@ public class MyHashTable<T> implements Collection<T> {
         }
         boolean wasRemovedAll = false;
 
-        for (MyArrayList<T> list : lists) {
+        for (ArrayList<T> list : lists) {
             if (list != null) {
                 for (T item : list) {
                     if (c.contains(item)) {
@@ -207,7 +144,7 @@ public class MyHashTable<T> implements Collection<T> {
         }
         boolean wasRetainedAll = false;
 
-        for (MyArrayList<T> list : lists) {
+        for (ArrayList<T> list : lists) {
             if (list != null) {
                 for (int j = 0; j < list.size(); j++) {
                     if (!c.contains(list.get(j))) {
@@ -241,14 +178,14 @@ public class MyHashTable<T> implements Collection<T> {
         }
         StringBuilder result = new StringBuilder("{").append(System.lineSeparator());
 
-        for (List<T> list : lists) {
-            if (!Objects.equals(list, null) && list.size() > 0) {
+        for (ArrayList<T> list : lists) {
+            if (list != null && list.size() > 0) {
                 int i = 0;
                 for (T item : list) {
-                    int indexObject = calculateIndexObject(item);
+                    int indexObject = calculateObjectIndex(item);
 
                     if (i == 0) {
-                        String str = String.format(" %d: (%s) ", indexObject, item);
+                        String str = String.format(" %3d: (%s) ", indexObject, item);
                         result.append(str);
                         i++;
                     } else {
@@ -278,9 +215,6 @@ public class MyHashTable<T> implements Collection<T> {
             if (!needContinue) {
                 return false;
             }
-            while (currentIndexArray + 1 < lists.length && Objects.equals(lists[currentIndexArray], null)) {
-                currentIndexArray++;
-            }
             if (lists[lists.length - 1] == null) {
                 return currentIndexArray + 1 < lists.length;
             }
@@ -294,6 +228,9 @@ public class MyHashTable<T> implements Collection<T> {
             }
             if (modCountCurrent != modCount) {
                 throw new ConcurrentModificationException("There was adding or removing elements!");
+            }
+            while (currentIndexArray + 1 < lists.length && lists[currentIndexArray] == null) {
+                currentIndexArray++;
             }
             T item = lists[currentIndexArray].get(currentIndexList);
 
@@ -315,14 +252,17 @@ public class MyHashTable<T> implements Collection<T> {
     @Override
     public Object[] toArray() {
         Object[] arrayForLists = new Object[size];
-
-        Iterator iterator = this.iterator();
         int i = 0;
 
-        while (iterator.hasNext() && i < size) {
-            arrayForLists[i] = iterator.next();
-            if (i < size - 1) {
-                i++;
+        for (ArrayList list : this.lists) {
+            if (list != null) {
+                for (Object item : list) {
+                    arrayForLists[i] = item;
+
+                    if (i < size - 1) {
+                        i++;
+                    }
+                }
             }
         }
         return arrayForLists;
@@ -333,18 +273,20 @@ public class MyHashTable<T> implements Collection<T> {
         if (array == null) {
             throw new IllegalArgumentException("This array is null!");
         }
-
         if (array.length < size) {
             //noinspection unchecked
             array = (T1[]) Arrays.copyOf(array, size, array.getClass());
         }
-        Iterator iterator = this.iterator();
         int i = 0;
 
-        while (iterator.hasNext() && i < size) {
-            //noinspection unchecked
-            array[i] = (T1) iterator.next();
-            i++;
+        for (ArrayList list : this.lists) {
+            if (list != null) {
+                for (Object item : list) {
+                    //noinspection unchecked
+                    array[i] = (T1) item;
+                    i++;
+                }
+            }
         }
         if (array.length > size) {
             array[size] = null;
