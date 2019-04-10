@@ -59,7 +59,6 @@ public class MyHashTable<T> implements Collection<T> {
     }
 
     @Override
-
     public boolean add(T t) {
         int indexObject = calculateObjectIndex(t);
 
@@ -93,10 +92,12 @@ public class MyHashTable<T> implements Collection<T> {
         if (lists[indexObject] == null) {
             return false;
         }
-
-        modCount++;
-        size--;
-        return lists[indexObject].remove(object);
+        if (lists[indexObject].remove(object)) {
+            modCount++;
+            size--;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -107,9 +108,12 @@ public class MyHashTable<T> implements Collection<T> {
         boolean wasRemovedAll = false;
 
         for (ArrayList<T> list : lists) {
-            if (list != null) {
-                wasRemovedAll = list.removeAll(c) || wasRemovedAll;
+            if (list != null && list.removeAll(c)) {
+                wasRemovedAll = true;
             }
+        }
+        if (wasRemovedAll) {
+            modCount ++;
         }
         return wasRemovedAll;
     }
@@ -122,9 +126,12 @@ public class MyHashTable<T> implements Collection<T> {
         boolean wasRetainedAll = false;
 
         for (ArrayList<T> list : lists) {
-            if (list != null) {
-                wasRetainedAll = list.retainAll(c) || wasRetainedAll;
+            if (list != null && list.retainAll(c)) {
+                wasRetainedAll = true;
             }
+        }
+        if (wasRetainedAll) {
+            modCount ++;
         }
         return wasRetainedAll;
     }
@@ -142,39 +149,32 @@ public class MyHashTable<T> implements Collection<T> {
         size = 0;
     }
 
-
     @Override
     public Iterator<T> iterator() {
         return new MyTableIterator();
     }
 
-    private int getIndexNextNotNullList(int start) {
-        if (start < 0 || start >= lists.length) {
-            throw new IllegalArgumentException("The value of argument isn't correct!");
-        }
-
-        for (int i = start; i < lists.length; i++) {
-            if (lists[i] != null && lists[i].size() > 0) {
-                return i;
-            }
-        }
-        return lists.length - 1;
-    }
-
     private class MyTableIterator implements Iterator<T> {
-        private int currentIndexArray = getIndexNextNotNullList(0);
-        private int currentIndexList = -1;
+        private int currentArrayIndex = getIndexNextNotNullList(0);
+        private int currentListIndex = 0;
         private int modCountCurrent = modCount;
+
+        private int getIndexNextNotNullList(int start) {
+            if (start < 0 || start >= lists.length) {
+                throw new IllegalArgumentException("The value of argument isn't correct!");
+            }
+
+            for (int i = start; i < lists.length; i++) {
+                if (lists[i] != null && lists[i].size() > 0) {
+                    return i;
+                }
+            }
+            return lists.length - 1;
+        }
 
         @Override
         public boolean hasNext() {
-            if (currentIndexArray + 1 < lists.length) {
-                return true;
-            }
-            if (lists[lists.length - 1] == null) {
-                return false;
-            }
-            return currentIndexList + 1 < lists[lists.length - 1].size();
+            return currentArrayIndex + 1 < lists.length || (lists[lists.length - 1] != null && currentListIndex + 1 < lists[lists.length - 1].size());
         }
 
         @Override
@@ -185,11 +185,14 @@ public class MyHashTable<T> implements Collection<T> {
             if (modCountCurrent != modCount) {
                 throw new ConcurrentModificationException("There was adding or removing elements!");
             }
-            T item = lists[currentIndexArray].get(++currentIndexList);
+            T item = lists[currentArrayIndex].get(currentListIndex);
 
-            if (currentIndexList + 1 == lists[currentIndexArray].size() && currentIndexArray++ + 1 < lists.length) {
-                currentIndexList = -1;
-                currentIndexArray = getIndexNextNotNullList(currentIndexArray);
+            if (currentListIndex + 1 == lists[currentArrayIndex].size() && currentArrayIndex + 1 < lists.length) {
+                currentListIndex = 0;
+                currentArrayIndex++;
+                currentArrayIndex = getIndexNextNotNullList(currentArrayIndex);
+            } else {
+                currentListIndex++;
             }
             return item;
         }
@@ -201,11 +204,7 @@ public class MyHashTable<T> implements Collection<T> {
         int i = 0;
 
         for (T item : this) {
-            arrayForLists[i] = item;
-
-            if (i < size - 1) {
-                i++;
-            }
+            arrayForLists[i++] = item;
         }
 
         return arrayForLists;
