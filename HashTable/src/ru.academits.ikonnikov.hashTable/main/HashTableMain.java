@@ -41,8 +41,6 @@ public class HashTableMain {
             System.out.printf("The myHashTableStrings has not item '%s'.%n", stringItem2);
         }
 
-
-
         if (myHashTableStrings.remove(stringItem1)) {
             System.out.printf("The item '%s' was removed from myHashTableStrings.%n", stringItem1);
         } else {
@@ -82,6 +80,7 @@ public class HashTableMain {
             System.out.printf("The result of method 'myHashTableStrings.retainAll(%s)'  is :%n", myCollectionStrings2.toString());
             System.out.println(myHashTableStrings.toString());
         }
+        System.out.println("The size of myHashTableStrings after retaining of myCollectionStrings2 is : " + myHashTableStrings.size());
         System.out.println();
 
         List<String> myListStringsSmall = new ArrayList<>(Arrays.asList("v1", "d1", "h1", null, "11", "21", "u1", null, "c1", "a1"));
@@ -131,6 +130,7 @@ public class HashTableMain {
         }
         System.out.printf("The myHashTableIntegers after removing of myCollectionIntegers %s is : %n", myCollectionIntegers.toString());
         System.out.println(myHashTableIntegers.toString());
+        System.out.println("The size of myHashTableIntegers after removing of myCollectionIntegers is : " + myHashTableIntegers.size());
 
         Iterator iteratorInteger = myHashTableIntegers.iterator();
         System.out.print("The items of myHashTableIntegers are : ");
