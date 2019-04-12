@@ -13,7 +13,6 @@ public class MyHashTable<T> implements Collection<T> {
         }
         //noinspection unchecked
         this.lists = new ArrayList[capacity];
-
         this.modCount = 0;
         this.size = 0;
     }
@@ -50,6 +49,7 @@ public class MyHashTable<T> implements Collection<T> {
         if (c == null) {
             throw new IllegalArgumentException("This collection is null!");
         }
+
         for (Object item : c) {
             if (!this.contains(item)) {
                 return false;
@@ -81,7 +81,6 @@ public class MyHashTable<T> implements Collection<T> {
         for (T item : c) {
             this.add(item);
         }
-
         return c.size() > 0;
     }
 
@@ -108,12 +107,17 @@ public class MyHashTable<T> implements Collection<T> {
         boolean wasRemovedAll = false;
 
         for (ArrayList<T> list : lists) {
-            if (list != null && list.removeAll(c)) {
-                wasRemovedAll = true;
+            if (list != null) {
+                int listSizeBeforeRemoving = list.size();
+
+                if (list.removeAll(c)) {
+                    wasRemovedAll = true;
+                    size -= listSizeBeforeRemoving - list.size();
+                }
             }
         }
         if (wasRemovedAll) {
-            modCount ++;
+            modCount++;
         }
         return wasRemovedAll;
     }
@@ -126,12 +130,17 @@ public class MyHashTable<T> implements Collection<T> {
         boolean wasRetainedAll = false;
 
         for (ArrayList<T> list : lists) {
-            if (list != null && list.retainAll(c)) {
-                wasRetainedAll = true;
+            if (list != null) {
+                int listSizeBeforeRetaining = list.size();
+
+                if (list.retainAll(c)) {
+                    wasRetainedAll = true;
+                    size -= listSizeBeforeRetaining - list.size();
+                }
             }
         }
         if (wasRetainedAll) {
-            modCount ++;
+            modCount++;
         }
         return wasRetainedAll;
     }
@@ -157,6 +166,7 @@ public class MyHashTable<T> implements Collection<T> {
     private class MyTableIterator implements Iterator<T> {
         private int currentArrayIndex = getIndexNextNotNullList(0);
         private int currentListIndex = 0;
+        private int currentCollectionIndex = -1;
         private int modCountCurrent = modCount;
 
         private int getIndexNextNotNullList(int start) {
@@ -174,7 +184,7 @@ public class MyHashTable<T> implements Collection<T> {
 
         @Override
         public boolean hasNext() {
-            return currentArrayIndex + 1 < lists.length || (lists[lists.length - 1] != null && currentListIndex + 1 < lists[lists.length - 1].size());
+            return currentCollectionIndex + 1 < size;
         }
 
         @Override
@@ -185,6 +195,7 @@ public class MyHashTable<T> implements Collection<T> {
             if (modCountCurrent != modCount) {
                 throw new ConcurrentModificationException("There was adding or removing elements!");
             }
+            currentCollectionIndex++;
             T item = lists[currentArrayIndex].get(currentListIndex);
 
             if (currentListIndex + 1 == lists[currentArrayIndex].size() && currentArrayIndex + 1 < lists.length) {
@@ -204,9 +215,9 @@ public class MyHashTable<T> implements Collection<T> {
         int i = 0;
 
         for (T item : this) {
-            arrayForLists[i++] = item;
+            arrayForLists[i] = item;
+            i++;
         }
-
         return arrayForLists;
     }
 
@@ -226,7 +237,6 @@ public class MyHashTable<T> implements Collection<T> {
             array[i] = (T1) item;
             i++;
         }
-
         if (array.length > size) {
             array[size] = null;
         }
@@ -243,6 +253,7 @@ public class MyHashTable<T> implements Collection<T> {
         for (ArrayList<T> list : lists) {
             if (list != null && list.size() > 0) {
                 int i = 0;
+
                 for (T item : list) {
                     int indexObject = calculateObjectIndex(item);
 
