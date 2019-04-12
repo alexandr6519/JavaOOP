@@ -1,4 +1,4 @@
-package ru.academits.ikonnikov.myArrayList.classes;
+package ru.academits.ikonnikov.arrayList.classes;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -67,6 +67,7 @@ public class MyArrayList<T> implements List<T> {
         private int currentIndex = -1;
         private int modCountCurrent = modCount;
 
+        @Override
         public boolean hasNext() {
             return currentIndex + 1 < size;
         }
@@ -171,7 +172,6 @@ public class MyArrayList<T> implements List<T> {
         return true;
     }
 
-
     @Override
     public void add(int index, T element) {
         if (index < 0 || index > size) {
@@ -219,7 +219,6 @@ public class MyArrayList<T> implements List<T> {
         if (index == size) {
             return this.addAll(c);
         }
-
         ensureCapacity(this.size + c.size());
         System.arraycopy(items, index, items, index + c.size(), this.size - index);
 
@@ -288,7 +287,7 @@ public class MyArrayList<T> implements List<T> {
 
         for (int i = 0; i < size; i++) {
             if (!c.contains(items[i])) {
-                this.remove(i);
+                remove(i);
                 wasRetainedAll = true;
                 i--;
             }
