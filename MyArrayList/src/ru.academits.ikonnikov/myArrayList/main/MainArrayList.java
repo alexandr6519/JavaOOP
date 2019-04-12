@@ -1,6 +1,6 @@
-package ru.academits.ikonnikov.myArrayList.main;
+package ru.academits.ikonnikov.arrayList.main;
 
-import ru.academits.ikonnikov.myArrayList.classes.MyArrayList;
+import ru.academits.ikonnikov.arrayList.classes.MyArrayList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +9,15 @@ import java.util.List;
 
 public class MainArrayList {
     public static void main(String[] args) {
-        MyArrayList<String> myListStringsEmpty = new MyArrayList<>(0);
-        System.out.println("The myListStringsEmpty is: " + myListStringsEmpty.toString());
-        System.out.println("The length of myListStringsEmpty.toArray()is: " + myListStringsEmpty.toArray().length);
-        myListStringsEmpty.clear();
-        System.out.println("The myListStringsEmpty after clearing is: " + myListStringsEmpty.toString());
-        myListStringsEmpty.ensureCapacity(10);
-        System.out.println("The myListStringsEmpty is: " + myListStringsEmpty.toString());
+        Integer[] arrayIntegers1 = {0, 1, 2, 3, 4, 5, 6};
+        MyArrayList<? extends Number> myListNumbersEmpty = new MyArrayList<>(0);
+        System.out.println("The myListStringsEmpty is: " + myListNumbersEmpty.toString());
+        System.out.println("The length of myListStringsEmpty.toArray()is: " + myListNumbersEmpty.toArray().length);
+        myListNumbersEmpty.clear();
+        System.out.println("The myListStringsEmpty after clearing is: " + myListNumbersEmpty.toString());
+        myListNumbersEmpty.ensureCapacity(10);
+        //myListNumbersEmpty.addAll(arrayIntegers1);
+        System.out.println("The myListStringsEmpty is: " + myListNumbersEmpty.toString());
         System.out.println();
 
         Integer[] arrayIntegers = {0, 1, 2, null, 4, 5, 6};
@@ -79,6 +81,7 @@ public class MainArrayList {
 
         System.out.println("The result of removing collection {'4','8'} from myListStrings  is : " + myListStrings.removeAll(collection2));
         System.out.println("The myListStrings  after removing collection {'4','8'} is : " + myListStrings.toString());
+        System.out.println("The size of myListStrings  after removing collection {'4','8'} is : " + myListStrings.size());
 
         Object[] arrayListToArrayStr = myListStrings.toArray();
         System.out.print("The array by method 'myListStrings.toArray()' is : (");
@@ -104,6 +107,7 @@ public class MainArrayList {
         }
         System.out.println("The result of using method 'retainAll' to myListStrings by collection {'s','q','p'} is : " + myListStrings.retainAll(collection1));
         System.out.println("The myListStrings after using method 'retainAll' by collection {'s','q','p'} is : " + myListStrings.toString());
+        System.out.println("The size of myListStrings after using method 'retainAll' by collection {'s','q','p'} is : " + myListStrings.size());
         System.out.println();
 
         MyArrayList<String> myListStringsCopy = new MyArrayList<>(arrayStrings);
@@ -143,6 +147,7 @@ public class MainArrayList {
 
         if (myListShorts.retainAll(collection4)) {
             System.out.println("The myListShorts after using method 'retainAll' by collection {'11','16','20'} is : " + myListShorts.toString());
+            System.out.println("The size of myListShorts after using method 'retainAll' by collection {'11','16','20'} is : " + myListShorts.size());
         }
     }
 }
