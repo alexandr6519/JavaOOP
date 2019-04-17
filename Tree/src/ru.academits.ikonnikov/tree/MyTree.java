@@ -19,68 +19,6 @@ public class MyTree<T> {
         size = 0;
     }
 
-    /*public class TreeNode<T> {
-        private TreeNode<T> left;
-        private TreeNode<T> right;
-        private T data;
-
-        private TreeNode(T data) {
-            this.data = data;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        private boolean hasNotChildren() {
-            return this.getLeft() == null && this.getRight() == null;
-        }
-
-        private boolean hasBothChildren() {
-            return this.getLeft() != null && this.getRight() != null;
-        }
-
-        private  TreeNode<T>[] getChildren() {
-            //noinspection unchecked
-            return (TreeNode<T>[]) new TreeNode[]{left, right};
-        }
-
-        private void setData(T data) {
-            this.data = data;
-        }
-
-        private TreeNode<T> getLeft() {
-            return left;
-        }
-
-        private void setLeft(TreeNode<T> left) {
-            this.left = left;
-        }
-
-        private TreeNode<T> getRight() {
-            return right;
-        }
-
-        private void setRight(TreeNode<T> right) {
-            this.right = right;
-        }
-
-        @Override
-        public String toString() {
-            if (left == null) {
-                if (right == null) {
-                    return String.format("[DATA:%3s, LEFT:   , RIGHT:    ]", data);
-                } else {
-                    return String.format("[DATA:%3s, LEFT:   , RIGHT:%3s ]", data, right.getData());
-                }
-            }
-            if (right == null) {
-                return String.format("[DATA:%3s, LEFT:%3s, RIGHT:    ]", data, left.getData());
-            }
-            return String.format("[DATA:%3s, LEFT:%3s, RIGHT:%3s ]", data, left.getData(), right.getData());
-        }
-    }*/
-
     public int getSize() {
         return this.size;
     }
