@@ -1,6 +1,9 @@
 package ru.academits.ikonnikov.tree.main;
 
 import ru.academits.ikonnikov.tree.MyTree;
+import ru.academits.ikonnikov.tree.classes.TreeNode;
+
+import java.util.Comparator;
 
 public class TreeMain {
     public static void main(String[] args) {
@@ -27,8 +30,15 @@ public class TreeMain {
         stringMyTree.insertNode("o");
         stringMyTree.insertNode("u");
         System.out.println("The size of stringMyTree is : " + stringMyTree.getSize());
-        System.out.println("The  result of method *goAroundInWidth()* is : ");
-        stringMyTree.goAroundInWidth();
+        System.out.println();
+        System.out.println("The  result of method (goAroundInWidth) is : ");
+
+        //ArrayList<TreeNode<String>> arrayNodes = new ArrayList<>(stringMyTree.getSize());
+
+        stringMyTree.goAroundInWidth((TreeNode<String> node) -> {
+            System.out.printf(" %s %n", node.toString());
+        });
+        System.out.println();
 
         String x = "j";
 
@@ -36,42 +46,22 @@ public class TreeMain {
             System.out.printf("The value '%s' was removed from stringMyTree.%n", x);
         }
         System.out.printf("The size of stringMyTree after removing of item '%s' is : %s %n", x, stringMyTree.getSize());
-
-        String str1 = "q";
-
-        if (stringMyTree.getNodeAndParentByValue(str1)[1] != null) {
-            System.out.printf("The node (%2s ) is left child of node %2s.%n", stringMyTree.getNodeAndParentByValue(str1)[1], stringMyTree.getNodeAndParentByValue(str1)[0]);
-        } else {
-            System.out.printf("The node (%2s ) is left child of node %2s.%n", stringMyTree.getNodeAndParentByValue(str1)[2], stringMyTree.getNodeAndParentByValue(str1)[0]);
-        }
-
-        String str2 = "p";
-
-        if (stringMyTree.getNodeAndParentByValue(str2)[1] != null) {
-            System.out.printf("The node (%2s ) is left child of node %2s.%n", stringMyTree.getNodeAndParentByValue(str2)[1], stringMyTree.getNodeAndParentByValue(str2)[0]);
-        } else {
-            System.out.printf("The node (%2s ) is left child of node %2s.%n", stringMyTree.getNodeAndParentByValue(str2)[2], stringMyTree.getNodeAndParentByValue(str2)[0]);
-        }
-
-        String str3 = "t";
-
-        if (stringMyTree.getNodeAndParentByValue(str3) != null) {
-            System.out.printf("The parent of node with value (%2s ) is : %s %n", str3, stringMyTree.getNodeAndParentByValue(str3)[0]);
-        }
-
-        String str4 = "k";
-
-        if (stringMyTree.getNodeAndParentByValue(str4) != null) {
-            System.out.printf("The parent of node with value (%2s ) is : %s %n", str4, stringMyTree.getNodeAndParentByValue(str4)[0]);
-        }
         System.out.println();
 
-        stringMyTree.startIndex = 1;
-        System.out.println("The  result of method *goAroundInDepthUsingRecursion()* is : ");
-        stringMyTree.goAroundInDepthUsingRecursion();
+        System.out.println("The  result of method (goAroundInDepthUsingRecursion) is : ");
+        stringMyTree.goAroundInDepthUsingRecursion((TreeNode<String> node) -> {
+            System.out.printf(" %s %n", node.toString());
+        });
         System.out.println();
 
-        MyTree<Integer> integerMyTree = new MyTree<>(10);
+        Comparator<Integer> comparatorInteger = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer item1, Integer item2) {
+                return Integer.compare(item1, item2);
+            }
+        };
+
+        MyTree<Integer> integerMyTree = new MyTree<>(10, comparatorInteger);
         integerMyTree.insertNode(6);
         integerMyTree.insertNode(0);
         integerMyTree.insertNode(1);
@@ -95,23 +85,30 @@ public class TreeMain {
         System.out.println("The size of integerMyTree is : " + integerMyTree.getSize());
         System.out.println();
 
-       Integer y = 8;
+        Integer y = 8;
 
         if (integerMyTree.removeNodeByValue(y)) {
             System.out.printf("The value '%s' was removed from integerMyTree.%n", y);
         }
         System.out.printf("The size of integerMyTree after removing of item '%s' is : %s %n", y, integerMyTree.getSize());
         System.out.println();
-        System.out.println("The result of using of method \"integerMyTree.goAroundInDepth()\" is:");
-        integerMyTree.goAroundInDepth();
-        System.out.println();
-        integerMyTree.startIndex = 1;
-        System.out.println("The result of using of method *goAroundInDepthUsingRecursion()* is :");
-        integerMyTree.goAroundInDepthUsingRecursion();
+
+        System.out.println("The result of using of method (goAroundInDepth) is:");
+        integerMyTree.goAroundInDepth((TreeNode<Integer> node) -> {
+            System.out.printf(" %s %n", node.toString());
+        });
         System.out.println();
 
-        integerMyTree.startIndex = 1;
-        System.out.println("The result of using of method 'integerMyTree.goAroundInWidth()' is :");
-        integerMyTree.goAroundInWidth();
+        System.out.println("The result of using of method (goAroundInDepthUsingRecursion) is :");
+        integerMyTree.goAroundInDepthUsingRecursion((TreeNode<Integer> node) -> {
+            System.out.printf(" %s %n", node.toString());
+        });
+        System.out.println();
+
+        System.out.println("The result of using of method (goAroundInWidth) is :");
+        integerMyTree.goAroundInWidth((TreeNode<Integer> node) -> {
+            System.out.printf(" %s %n", node.toString());
+        });
     }
+
 }
