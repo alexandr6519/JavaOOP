@@ -9,12 +9,6 @@ public class TreeNode<T> {
         this.data = data;
     }
 
-    public TreeNode(T data, TreeNode<T> left, TreeNode<T> right) {
-        this.data = data;
-        this.left = left;
-        this.right = right;
-    }
-
     public T getData() {
         return data;
     }
@@ -30,6 +24,11 @@ public class TreeNode<T> {
     public TreeNode<T>[] getChildren() {
         //noinspection unchecked
         return (TreeNode<T>[]) new TreeNode[]{left, right};
+    }
+
+    public TreeNode<T>[] getChildrenBackwards() {
+        //noinspection unchecked
+        return (TreeNode<T>[]) new TreeNode[]{right, left};
     }
 
     public void setData(T data) {
