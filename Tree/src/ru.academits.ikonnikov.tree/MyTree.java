@@ -3,15 +3,28 @@ package ru.academits.ikonnikov.tree;
 import ru.academits.ikonnikov.tree.classes.TreeNode;
 
 import java.util.*;
+import java.util.function.Consumer;
 
-public class MyTree<T> {
+public class MyTree<T> {//implements Comparator<T> {
     private TreeNode<T> root;
     private int size;
-    public int startIndex = 1;
+    private Comparator <T> comparator = new Comparator<T>() {
+        @Override
+        public int compare(T t1, T t2) {
+            //noinspection deprecation,unchecked
+            return ((Comparable<T>) t1).compareTo(t2);
+        }
+    };
 
     public MyTree(T rootData) {
-        size = 1;
+        this.size = 1;
         this.root = new TreeNode<>(rootData);
+    }
+
+    public MyTree(T rootData, Comparator<T> comparator) {
+        this.size = 1;
+        this.root = new TreeNode<>(rootData);
+        this.comparator = comparator;
     }
 
     public MyTree() {
@@ -23,9 +36,7 @@ public class MyTree<T> {
         return this.size;
     }
 
-    private Comparator<T> compareData = Comparator.comparingInt(Object::hashCode);
-
-    public TreeNode<T>[] getNodeAndParentByValue(T value) {
+    private TreeNode<T>[] getNodeAndParentByValue(T value) {
         if (size == 0) {
             throw new IllegalArgumentException("This tree is empty!");
         }
@@ -38,7 +49,7 @@ public class MyTree<T> {
         int i = 1;
 
         while (i < size) {
-            if (compareData.compare(value, currentNode.getData()) < 0) {
+            if (comparator.compare(value, currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     parentNode = currentNode;
                     currentNode = currentNode.getLeft();
@@ -56,13 +67,12 @@ public class MyTree<T> {
                 }
             }
             if (Objects.equals(value, currentNode.getData())) {
-                if (compareData.compare(currentNode.getData(), parentNode.getData()) < 0) {
+                if (comparator.compare(currentNode.getData(), parentNode.getData()) < 0) {
                     //noinspection unchecked
                     return (TreeNode<T>[]) new TreeNode[]{parentNode, currentNode, null};
-                } else {
-                    //noinspection unchecked
-                    return (TreeNode<T>[]) new TreeNode[]{parentNode, null, currentNode};
                 }
+                //noinspection unchecked
+                return (TreeNode<T>[]) new TreeNode[]{parentNode, null, currentNode};
             }
         }
         return null;
@@ -75,13 +85,11 @@ public class MyTree<T> {
             return;
         }
         TreeNode<T> currentNode = root;
-        int i = 0;
 
-        while (i < size) {
-            if (compareData.compare(value, currentNode.getData()) < 0) {
+        do {
+            if (comparator.compare(value, currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     currentNode = currentNode.getLeft();
-                    i++;
                 } else {
                     currentNode.setLeft(new TreeNode<>(value));
                     size++;
@@ -90,14 +98,13 @@ public class MyTree<T> {
             } else {
                 if (currentNode.getRight() != null) {
                     currentNode = currentNode.getRight();
-                    i++;
                 } else {
                     currentNode.setRight(new TreeNode<>(value));
                     size++;
                     return;
                 }
             }
-        }
+        } while (currentNode != null);
     }
 
     private TreeNode<T>[] getMinLeftNodeAndParent(TreeNode<T> node) {
@@ -116,7 +123,7 @@ public class MyTree<T> {
 
     public boolean removeNodeByValue(T value) {
         if (size == 0) {
-            throw new IllegalArgumentException("This tree is empty!");
+            return false;
         }
         TreeNode<T>[] arrayRemoving = getNodeAndParentByValue(value);
 
@@ -209,96 +216,68 @@ public class MyTree<T> {
         }
     }
 
-    private void executeMethod1(TreeNode<T> node) {
-        System.out.printf("%2d) %s%n", startIndex, node.toString());
-        startIndex++;
-    }
-
-    public void goAroundInWidth() {
+    public void goAroundInWidth(Consumer<TreeNode<T>> method) {
         if (root == null) {
-            throw new IllegalArgumentException("This tree is empty!");
+            return;
         }
-        //noinspection unchecked
-        TreeNode<T>[] queue = new TreeNode[size];
-        queue[0] = root;
-        int countQueueItems = 1;
-        int indexFirstItem = 0;
-        int indexLastItem = 0;
+        Queue<TreeNode<T>> queue = new LinkedList<>();
+        queue.add(root);
 
-        while (countQueueItems > 0) {
-            TreeNode<T> currentItem = queue[indexFirstItem];
-            executeMethod1(currentItem);
-            queue[indexFirstItem] = null;
-            indexFirstItem++;
+        while (queue.size() > 0) {
+            TreeNode<T> currentNode = queue.peek();
+            method.accept(currentNode);
 
-            if (currentItem.hasNotChildren()) {
-                countQueueItems--;
-                continue;
-            }
+            TreeNode<T>[] arrayChildren = currentNode.getChildren();
+            queue.remove();
 
-            if (currentItem.hasBothChildren()) {
-                indexLastItem++;
-                queue[indexLastItem] = currentItem.getLeft();
-                indexLastItem++;
-                queue[indexLastItem] = currentItem.getRight();
-                countQueueItems++;
-            } else if (currentItem.getLeft() != null) {
-                indexLastItem++;
-                queue[indexLastItem] = currentItem.getLeft();
-            } else {
-                indexLastItem++;
-                queue[indexLastItem] = currentItem.getRight();
+            for (TreeNode<T> child : arrayChildren) {
+                if (child != null) {
+                    queue.add(child);
+                }
             }
         }
     }
 
-    public void goAroundInDepthUsingRecursion() {
+    public void goAroundInDepthUsingRecursion(Consumer<TreeNode<T>> method) {
         if (root == null) {
-            throw new IllegalArgumentException("This tree is empty!");
+            return;
         }
         int i = 0;
-        visitNode(root);
+        visitNode(root, method);
     }
 
-    private void visitNode(TreeNode<T> currentNode) {
+    private void visitNode(TreeNode<T> currentNode, Consumer<TreeNode<T>> method) {
         if (currentNode == null) {
             return;
         }
-        executeMethod1(currentNode);
+        method.accept(currentNode);
 
-        for (TreeNode<T> child : currentNode.getChildren()) {
-            visitNode(child);
+        if (currentNode.getLeft() != null) {
+            visitNode(currentNode.getLeft(), method);
+        }
+        if (currentNode.getRight() != null) {
+            visitNode(currentNode.getRight(), method);
         }
     }
 
-    public void goAroundInDepth() {
+    public void goAroundInDepth(Consumer<TreeNode<T>> method) {
         if (root == null) {
-            throw new IllegalArgumentException("This tree is empty!");
+            return;
         }
-        //noinspection unchecked
-        TreeNode<T>[] stack = new TreeNode[size];
-        stack[0] = root;
-        int countStackItems = 1;
-        int indexLastItem = 0;
+        LinkedList<TreeNode<T>> list = new LinkedList<>();
+        list.add(root);
 
-        while (countStackItems > 0) {
-            TreeNode<T> currentItem = stack[indexLastItem];
-            executeMethod1(currentItem);
+        while (list.size() > 0) {
+            TreeNode<T> currentItem = list.getLast();
+            method.accept(currentItem);
 
-            if (currentItem.hasBothChildren()) {
-                stack[indexLastItem] = currentItem.getRight();
-                indexLastItem++;
-                stack[indexLastItem] = currentItem.getLeft();
-                countStackItems++;
-            } else if (currentItem.getLeft() != null) {
-                stack[indexLastItem] = currentItem.getLeft();
-            } else {
-                stack[indexLastItem] = currentItem.getRight();
-            }
-            if (currentItem.hasNotChildren()) {
-                stack[indexLastItem] = null;
-                indexLastItem--;
-                countStackItems--;
+            TreeNode<T>[] arrayChildren = currentItem.getChildrenBackwards();
+            list.removeLast();
+
+            for (TreeNode<T> child : arrayChildren) {
+                if (child != null) {
+                    list.add(child);
+                }
             }
         }
     }
