@@ -5,55 +5,66 @@ import ru.academits.ikonnikov.tree.classes.TreeNode;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class MyTree<T> {//implements Comparator<T> {
+public class MyTree<T> {
     private TreeNode<T> root;
     private int size;
-    private Comparator <T> comparator = new Comparator<T>() {
-        @Override
-        public int compare(T t1, T t2) {
-            //noinspection deprecation,unchecked
-            return ((Comparable<T>) t1).compareTo(t2);
-        }
-    };
+    private Comparator<T> comparator;
 
     public MyTree(T rootData) {
-        this.size = 1;
-        this.root = new TreeNode<>(rootData);
+        size = 1;
+        root = new TreeNode<>(rootData);
+        comparator = new Comparator<T>() {
+            @Override
+            public int compare(T t1, T t2) {
+                //noinspection deprecation,unchecked
+                return ((Comparable<T>) t1).compareTo(t2);
+            }
+        };
     }
 
     public MyTree(T rootData, Comparator<T> comparator) {
-        this.size = 1;
-        this.root = new TreeNode<>(rootData);
+        size = 1;
+        root = new TreeNode<>(rootData);
         this.comparator = comparator;
     }
 
     public MyTree() {
         root = null;
         size = 0;
+        comparator = new Comparator<T>() {
+            @Override
+            public int compare(T t1, T t2) {
+                //noinspection deprecation,unchecked
+                return ((Comparable<T>) t1).compareTo(t2);
+            }
+        };
     }
 
     public int getSize() {
         return this.size;
     }
 
+    public boolean isInTree(T value) {
+        TreeNode[] arrayNodeAndParent = getNodeAndParentByValue(value);
+        return arrayNodeAndParent != null;
+    }
+
     private TreeNode<T>[] getNodeAndParentByValue(T value) {
         if (size == 0) {
             throw new IllegalArgumentException("This tree is empty!");
         }
-        if (Objects.equals(value, root.getData())) {
+        if (comparator.compare(value, root.getData()) == 0) {
             //noinspection unchecked
             return (TreeNode<T>[]) new TreeNode[]{null, root, null};
         }
         TreeNode<T> currentNode = root;
         TreeNode<T> parentNode;
-        int i = 1;
 
-        while (i < size) {
+        while (currentNode != null) {
             if (comparator.compare(value, currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     parentNode = currentNode;
                     currentNode = currentNode.getLeft();
-                    i++;
                 } else {
                     return null;
                 }
@@ -61,12 +72,11 @@ public class MyTree<T> {//implements Comparator<T> {
                 if (currentNode.getRight() != null) {
                     parentNode = currentNode;
                     currentNode = currentNode.getRight();
-                    i++;
                 } else {
                     return null;
                 }
             }
-            if (Objects.equals(value, currentNode.getData())) {
+            if (comparator.compare(value, currentNode.getData()) == 0) {
                 if (comparator.compare(currentNode.getData(), parentNode.getData()) < 0) {
                     //noinspection unchecked
                     return (TreeNode<T>[]) new TreeNode[]{parentNode, currentNode, null};
@@ -86,7 +96,7 @@ public class MyTree<T> {//implements Comparator<T> {
         }
         TreeNode<T> currentNode = root;
 
-        do {
+        while (currentNode != null) {
             if (comparator.compare(value, currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     currentNode = currentNode.getLeft();
@@ -104,7 +114,7 @@ public class MyTree<T> {//implements Comparator<T> {
                     return;
                 }
             }
-        } while (currentNode != null);
+        }
     }
 
     private TreeNode<T>[] getMinLeftNodeAndParent(TreeNode<T> node) {
@@ -182,7 +192,7 @@ public class MyTree<T> {//implements Comparator<T> {
                 return true;
             }
             //case, when RemovedNode has only one child:
-            if (!removedNode.hasBothChildren()) {
+            if (removedNode.hasBothChildren()) {
                 if (arrayRemoving[1] == null) {
                     if (removedNode.getLeft() != null) {
                         parentRemovedNode.setRight(removedNode.getLeft());
@@ -216,19 +226,21 @@ public class MyTree<T> {//implements Comparator<T> {
         }
     }
 
-    public void goAroundInWidth(Consumer<TreeNode<T>> method) {
+    public void goAroundInWidth(Consumer<T> method) {
         if (root == null) {
             return;
         }
         Queue<TreeNode<T>> queue = new LinkedList<>();
         queue.add(root);
+        int countItems = 1;
 
         while (queue.size() > 0) {
-            TreeNode<T> currentNode = queue.peek();
-            method.accept(currentNode);
+            TreeNode<T> currentNode = queue.remove();
+            System.out.printf(" %2d)", countItems);
+            countItems++;
+            method.accept(currentNode.getData());
 
             TreeNode<T>[] arrayChildren = currentNode.getChildren();
-            queue.remove();
 
             for (TreeNode<T> child : arrayChildren) {
                 if (child != null) {
@@ -238,19 +250,18 @@ public class MyTree<T> {//implements Comparator<T> {
         }
     }
 
-    public void goAroundInDepthUsingRecursion(Consumer<TreeNode<T>> method) {
+    public void goAroundInDepthUsingRecursion(Consumer<T> method) {
         if (root == null) {
             return;
         }
-        int i = 0;
         visitNode(root, method);
     }
 
-    private void visitNode(TreeNode<T> currentNode, Consumer<TreeNode<T>> method) {
+    private void visitNode(TreeNode<T> currentNode, Consumer<T> method) {
         if (currentNode == null) {
             return;
         }
-        method.accept(currentNode);
+        method.accept(currentNode.getData());
 
         if (currentNode.getLeft() != null) {
             visitNode(currentNode.getLeft(), method);
@@ -260,16 +271,19 @@ public class MyTree<T> {//implements Comparator<T> {
         }
     }
 
-    public void goAroundInDepth(Consumer<TreeNode<T>> method) {
+    public void goAroundInDepth(Consumer<T> method) {
         if (root == null) {
             return;
         }
         LinkedList<TreeNode<T>> list = new LinkedList<>();
         list.add(root);
+        int countItems = 1;
 
         while (list.size() > 0) {
             TreeNode<T> currentItem = list.getLast();
-            method.accept(currentItem);
+            System.out.printf(" %2d)", countItems);
+            countItems++;
+            method.accept(currentItem.getData());
 
             TreeNode<T>[] arrayChildren = currentItem.getChildrenBackwards();
             list.removeLast();
