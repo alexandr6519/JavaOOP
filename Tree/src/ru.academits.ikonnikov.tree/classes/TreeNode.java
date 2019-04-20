@@ -18,7 +18,7 @@ public class TreeNode<T> {
     }
 
     public boolean hasBothChildren() {
-        return this.getLeft() != null && this.getRight() != null;
+        return this.getLeft() == null || this.getRight() == null;
     }
 
     public TreeNode<T>[] getChildren() {
@@ -55,14 +55,14 @@ public class TreeNode<T> {
     public String toString() {
         if (left == null) {
             if (right == null) {
-                return String.format("[DATA:%3s, LEFT:   , RIGHT:    ]", data);
+                return String.format("[DATA:%3s, L:   , R:    ]", data);
             } else {
-                return String.format("[DATA:%3s, LEFT:   , RIGHT:%3s ]", data, right.getData());
+                return String.format("[DATA:%3s, L:   , R:%3s ]", data, right.getData());
             }
         }
         if (right == null) {
-            return String.format("[DATA:%3s, LEFT:%3s, RIGHT:    ]", data, left.getData());
+            return String.format("[DATA:%3s, L:%3s, R:    ]", data, left.getData());
         }
-        return String.format("[DATA:%3s, LEFT:%3s, RIGHT:%3s ]", data, left.getData(), right.getData());
+        return String.format("[DATA:%3s, L:%3s, R:%3s ]", data, left.getData(), right.getData());
     }
 }
