@@ -280,14 +280,12 @@ public class MyTree<T> {
         int countItems = 1;
 
         while (list.size() > 0) {
-            TreeNode<T> currentItem = list.getLast();
+            TreeNode<T> currentItem = list.removeLast();
             System.out.printf(" %2d)", countItems);
             countItems++;
             method.accept(currentItem.getData());
-
             TreeNode<T>[] arrayChildren = currentItem.getChildrenBackwards();
-            list.removeLast();
-
+           
             for (TreeNode<T> child : arrayChildren) {
                 if (child != null) {
                     list.add(child);
