@@ -10,8 +10,10 @@ public class GraphMain {
         "Irkutsk", "Ufa", "Kazan"};
 
         LinkedList<String> listCities = new LinkedList<>(Arrays.asList(arrayCities));
-        listCities.add("Yakutsk");
         MyGraph myGraph = new MyGraph(listCities.size());
+    
+        listCities.add("Yakutsk");
+        myGraph.addVertex();
 
         int index1 = listCities.indexOf("Novosibirsk");
         int index2 = listCities.indexOf("Kemerovo");
