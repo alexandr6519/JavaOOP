@@ -65,7 +65,7 @@ public class GraphMain {
         System.out.println();
 
         System.out.println("The result of method (goAroundInDepth) is : ");
-        myGraph.goAroundInDepth((item) -> {
+        myGraph.goAroundInDepth(item -> {
             System.out.printf("The vertex is: [%12s], verticesConnected are : { ", listCities.get(item));
             LinkedList<Integer> children = myGraph.getChildren(item);
 
@@ -77,7 +77,7 @@ public class GraphMain {
         System.out.println();
 
         System.out.println("The result of method (goAroundInWidth) is : ");
-        myGraph.goAroundInWidth((item) -> {
+        myGraph.goAroundInWidth(item -> {
             System.out.printf("The vertex is: [%12s], verticesConnected are : { ", listCities.get(item));
             LinkedList<Integer> children = myGraph.getChildren(item);
 
