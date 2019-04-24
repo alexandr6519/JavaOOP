@@ -13,12 +13,17 @@ public class MyTree<T> {
     public MyTree(T rootData) {
         size = 1;
         root = new TreeNode<>(rootData);
-        comparator = new Comparator<T>() {
-            @Override
-            public int compare(T t1, T t2) {
-                //noinspection deprecation,unchecked
-                return ((Comparable<T>) t1).compareTo(t2);
+        comparator = (item1, item2) -> {
+            if (item1 == null || item2 == null) {
+                if (item1 == null && item2 == null) {
+                    return 0;
+                } else if (item1 == null) {
+                    return -1;
+                }
+                return 1;
             }
+            //noinspection deprecation,unchecked
+            return ((Comparable<T>) item1).compareTo(item2);
         };
     }
 
@@ -28,15 +33,26 @@ public class MyTree<T> {
         this.comparator = comparator;
     }
 
+    public MyTree(Comparator<T> comparator) {
+        size = 0;
+        root = null;
+        this.comparator = comparator;
+    }
+
     public MyTree() {
         root = null;
         size = 0;
-        comparator = new Comparator<T>() {
-            @Override
-            public int compare(T t1, T t2) {
-                //noinspection deprecation,unchecked
-                return ((Comparable<T>) t1).compareTo(t2);
+        comparator = (item1, item2) -> {
+            if (item1 == null || item2 == null) {
+                if (item1 == null && item2 == null) {
+                    return 0;
+                } else if (item1 == null) {
+                    return -1;
+                }
+                return 1;
             }
+            //noinspection deprecation,unchecked
+            return ((Comparable<T>) item1).compareTo(item2);
         };
     }
 
@@ -53,15 +69,26 @@ public class MyTree<T> {
         if (size == 0) {
             throw new IllegalArgumentException("This tree is empty!");
         }
-        if (comparator.compare(value, root.getData()) == 0) {
-            //noinspection unchecked
-            return (TreeNode<T>[]) new TreeNode[]{null, root, null};
-        }
         TreeNode<T> currentNode = root;
-        TreeNode<T> parentNode;
+        TreeNode<T> parentNode = null;
 
         while (currentNode != null) {
-            if (comparator.compare(value, currentNode.getData()) < 0) {
+            int resultCompareValueAndCurrentNodeData = comparator.compare(value, currentNode.getData());
+
+            if (resultCompareValueAndCurrentNodeData == 0) {
+                if (parentNode == null) {
+                    //noinspection unchecked
+                    return (TreeNode<T>[]) new TreeNode[]{null, root, null};
+                }
+                if (comparator.compare(currentNode.getData(), parentNode.getData()) < 0) {
+                    //noinspection unchecked
+                    return (TreeNode<T>[]) new TreeNode[]{parentNode, currentNode, null};
+                }
+                //noinspection unchecked
+                return (TreeNode<T>[]) new TreeNode[]{parentNode, null, currentNode};
+            }
+
+            if (resultCompareValueAndCurrentNodeData < 0) {
                 if (currentNode.getLeft() != null) {
                     parentNode = currentNode;
                     currentNode = currentNode.getLeft();
@@ -75,14 +102,6 @@ public class MyTree<T> {
                 } else {
                     return null;
                 }
-            }
-            if (comparator.compare(value, currentNode.getData()) == 0) {
-                if (comparator.compare(currentNode.getData(), parentNode.getData()) < 0) {
-                    //noinspection unchecked
-                    return (TreeNode<T>[]) new TreeNode[]{parentNode, currentNode, null};
-                }
-                //noinspection unchecked
-                return (TreeNode<T>[]) new TreeNode[]{parentNode, null, currentNode};
             }
         }
         return null;
@@ -143,88 +162,72 @@ public class MyTree<T> {
         TreeNode<T> removedNode;
         TreeNode<T> parentRemovedNode = arrayRemoving[0];
 
-        //case, when RemovedNode is root:
-        if (parentRemovedNode == null) {
-            removedNode = root;
-            //case, when root (as RemovedNode) has not children:
-            if (root.hasNotChildren()) {
+        if (arrayRemoving[2] == null) {
+            removedNode = arrayRemoving[1];
+        } else {
+            removedNode = arrayRemoving[2];
+        }
+        //case, when RemovedNode has not children:
+        if (removedNode.hasNotChildren()) {
+            if (parentRemovedNode == null) {
                 root = null;
                 size = 0;
                 return true;
-            }
-            //case, when root (as RemovedNode) has only one child:
-            if (root.getLeft() == null) {
-                root = root.getRight();
-                size--;
-                return true;
-            } else if (root.getRight() == null) {
-                root = root.getLeft();
-                size--;
-                return true;
-            }
-            //case, when root (as RemovedNode) has both children:
-            TreeNode<T>[] arrayMinLeft = getMinLeftNodeAndParent(root);
-            root = arrayMinLeft[1];
-            root.setLeft(removedNode.getLeft());
-            arrayMinLeft[0].setLeft(arrayMinLeft[1].getRight());
-
-            //case, when RemovedNode.getRight() is not minLeftItem:
-            if (arrayMinLeft[2] != null) {
-                root.setRight(removedNode.getRight());
+            } else if (arrayRemoving[2] == null) {
+                parentRemovedNode.setLeft(null);
+            } else {
+                parentRemovedNode.setRight(null);
             }
             size--;
             return true;
-        } else {
-            //case, when RemovedNode is not root:
-            if (arrayRemoving[2] == null) {
-                removedNode = arrayRemoving[1];
-            } else {
-                removedNode = arrayRemoving[2];
-            }
-            //case, when RemovedNode has not children:
-            if (removedNode.hasNotChildren()) {
-                if (arrayRemoving[2] == null) {
-                    parentRemovedNode.setLeft(null);
+        }
+        //case, when RemovedNode has only one child:
+        if (removedNode.hasNotBothChildren()) {
+            if (arrayRemoving[1] == null && parentRemovedNode != null) {
+                if (removedNode.getLeft() != null) {
+                    parentRemovedNode.setRight(removedNode.getLeft());
                 } else {
-                    parentRemovedNode.setRight(null);
+                    parentRemovedNode.setRight(removedNode.getRight());
                 }
-                size--;
-                return true;
-            }
-            //case, when RemovedNode has only one child:
-            if (removedNode.hasBothChildren()) {
-                if (arrayRemoving[1] == null) {
-                    if (removedNode.getLeft() != null) {
-                        parentRemovedNode.setRight(removedNode.getLeft());
-                    } else {
-                        parentRemovedNode.setRight(removedNode.getRight());
-                    }
-                } else if (removedNode.getLeft() != null) {
+            } else if (parentRemovedNode != null) {
+                if (removedNode.getLeft() != null) {
                     parentRemovedNode.setLeft(removedNode.getLeft());
                 } else {
                     parentRemovedNode.setLeft(removedNode.getRight());
                 }
-                size--;
-                return true;
+            } else if (root.getLeft() == null) {
+                root = root.getRight();
+            } else {
+                root = root.getLeft();
             }
-            //case, when RemovedNode has both children:
-            TreeNode<T>[] arrayMinLeft = getMinLeftNodeAndParent(removedNode);
-            arrayMinLeft[1].setLeft(removedNode.getLeft());
+            size--;
+            return true;
+        }
+        //case, when RemovedNode has both children:
+        TreeNode<T>[] arrayMinLeft = getMinLeftNodeAndParent(removedNode);
+        arrayMinLeft[1].setLeft(removedNode.getLeft());
+        arrayMinLeft[0].setLeft(arrayMinLeft[1].getRight());
 
+        if (parentRemovedNode != null) {
             if (arrayRemoving[1] == null) {
                 parentRemovedNode.setRight(arrayMinLeft[1]);
             } else {
                 parentRemovedNode.setLeft(arrayMinLeft[1]);
             }
-            //case, when RemovedNode.getRight() is not minLeftItem:
             if (arrayMinLeft[2] != null) {
-                arrayMinLeft[0].setLeft(arrayMinLeft[1].getRight());
                 arrayMinLeft[1].setRight(removedNode.getRight());
             }
-            size--;
-            return true;
+        } else {
+            root = arrayMinLeft[1];
+            root.setLeft(removedNode.getLeft());
         }
+        if (arrayMinLeft[2] != null) {
+            root.setRight(removedNode.getRight());
+        }
+        size--;
+        return true;
     }
+
 
     public void goAroundInWidth(Consumer<T> method) {
         if (root == null) {
@@ -232,14 +235,10 @@ public class MyTree<T> {
         }
         Queue<TreeNode<T>> queue = new LinkedList<>();
         queue.add(root);
-        int countItems = 1;
 
         while (queue.size() > 0) {
             TreeNode<T> currentNode = queue.remove();
-            System.out.printf(" %2d)", countItems);
-            countItems++;
             method.accept(currentNode.getData());
-
             TreeNode<T>[] arrayChildren = currentNode.getChildren();
 
             for (TreeNode<T> child : arrayChildren) {
@@ -275,20 +274,17 @@ public class MyTree<T> {
         if (root == null) {
             return;
         }
-        LinkedList<TreeNode<T>> list = new LinkedList<>();
-        list.add(root);
-        int countItems = 1;
+        LinkedList<TreeNode<T>> stack = new LinkedList<>();
+        stack.add(root);
 
-        while (list.size() > 0) {
-            TreeNode<T> currentItem = list.removeLast();
-            System.out.printf(" %2d)", countItems);
-            countItems++;
+        while (stack.size() > 0) {
+            TreeNode<T> currentItem = stack.removeLast();
             method.accept(currentItem.getData());
             TreeNode<T>[] arrayChildren = currentItem.getChildrenBackwards();
-           
+
             for (TreeNode<T> child : arrayChildren) {
                 if (child != null) {
-                    list.add(child);
+                    stack.add(child);
                 }
             }
         }
