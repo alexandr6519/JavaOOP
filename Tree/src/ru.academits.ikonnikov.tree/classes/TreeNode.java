@@ -17,7 +17,7 @@ public class TreeNode<T> {
         return this.getLeft() == null && this.getRight() == null;
     }
 
-    public boolean hasBothChildren() {
+    public boolean hasNotBothChildren() {
         return this.getLeft() == null || this.getRight() == null;
     }
 
