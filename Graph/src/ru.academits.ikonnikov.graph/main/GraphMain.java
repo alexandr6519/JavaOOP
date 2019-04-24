@@ -3,6 +3,7 @@ package ru.academits.ikonnikov.graph.main;
 import ru.academits.ikonnikov.graph.MyGraph;
 
 import java.util.LinkedList;
+import java.util.Arrays;
 
 public class GraphMain {
     String [] arrayCities = new String[] {"Novosibirsk", "Kemerovo", "Omsk", "Krasnoyarsk", "Tomsk", "Moscow", "St.Peterburg", "Abakan",
