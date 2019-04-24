@@ -13,7 +13,10 @@ public class GraphMain {
         MyGraph myGraph = new MyGraph(listCities.size());
     
         listCities.add("Yakutsk");
-        myGraph.addVertex();
+    
+        if (myGraph.addVertex()) {
+            System.out.printf("The vertex [%s] was added to myGraph ", listCities.get(myGraph.getVertexCount() - 1));
+        };
 
         int index1 = listCities.indexOf("Novosibirsk");
         int index2 = listCities.indexOf("Kemerovo");
