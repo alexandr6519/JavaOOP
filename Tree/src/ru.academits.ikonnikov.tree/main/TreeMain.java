@@ -11,7 +11,7 @@ public class TreeMain {
         stringMyTree.insertNode("f");
         stringMyTree.insertNode("p");
         stringMyTree.insertNode("h");
-        stringMyTree.insertNode("k");
+        stringMyTree.insertNode(null);
         stringMyTree.insertNode("b");
         stringMyTree.insertNode("t");
         stringMyTree.insertNode("a");
@@ -28,12 +28,21 @@ public class TreeMain {
         stringMyTree.insertNode("q");
         stringMyTree.insertNode("o");
         stringMyTree.insertNode("u");
+        stringMyTree.insertNode("k");
+        stringMyTree.insertNode(null);
+
         System.out.println("The size of stringMyTree is : " + stringMyTree.getSize());
         System.out.println();
         System.out.println("The  result of method (goAroundInWidth) is : ");
 
         stringMyTree.goAroundInWidth((node) -> {
             System.out.printf("[ %s ]%n", node);
+        });
+        System.out.println();
+
+        System.out.println("The result of using of method (goAroundInDepth) is:");
+        stringMyTree.goAroundInDepth((nodeData) -> {
+            System.out.printf("[ %s ] %n", nodeData);
         });
         System.out.println();
 
@@ -51,7 +60,17 @@ public class TreeMain {
         });
         System.out.println();
 
-        Comparator<Integer> comparatorInteger = Integer::compare;
+        Comparator<Integer> comparatorInteger = (item1, item2) -> {
+            if (item1 == null || item2 == null) {
+                if (item1 == null && item2 == null) {
+                    return 0;
+                } else if (item1 == null) {
+                    return -1;
+                }
+                return 1;
+            }
+            return Integer.compare(item1, item2);
+        };
 
         MyTree<Integer> integerMyTree = new MyTree<>(10, comparatorInteger);
         integerMyTree.insertNode(6);
@@ -59,7 +78,7 @@ public class TreeMain {
         integerMyTree.insertNode(1);
         integerMyTree.insertNode(8);
         integerMyTree.insertNode(7);
-        integerMyTree.insertNode(9);
+        integerMyTree.insertNode(null);
         integerMyTree.insertNode(6);
         integerMyTree.insertNode(7);
         integerMyTree.insertNode(16);
@@ -74,6 +93,8 @@ public class TreeMain {
         integerMyTree.insertNode(22);
         integerMyTree.insertNode(21);
         integerMyTree.insertNode(23);
+        integerMyTree.insertNode(9);
+        integerMyTree.insertNode(null);
 
         System.out.println("The size of integerMyTree is : " + integerMyTree.getSize());
         System.out.println();
@@ -84,7 +105,7 @@ public class TreeMain {
         });
         System.out.println();
 
-        Integer y = 28;
+        Integer y = null;
 
         if (integerMyTree.isInTree(y)) {
             integerMyTree.removeNodeByValue(y);
@@ -95,7 +116,7 @@ public class TreeMain {
         }
         System.out.println();
 
-        Integer z = 8;
+        Integer z = 10;
 
         if (integerMyTree.isInTree(z)) {
             integerMyTree.removeNodeByValue(z);
@@ -107,15 +128,11 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInDepthUsingRecursion) is :");
-        integerMyTree.goAroundInDepthUsingRecursion((nodeData) -> {
-            System.out.printf("[ %s ] %n", nodeData);
-        });
+        integerMyTree.goAroundInDepthUsingRecursion((nodeData) -> System.out.printf("[ %s ] %n", nodeData));
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInWidth) is :");
-        integerMyTree.goAroundInWidth((nodeData) -> {
-            System.out.printf("[ %s ] %n", nodeData);
-        });
+        integerMyTree.goAroundInWidth((nodeData) -> System.out.printf(" [ %s ] %n", nodeData));
         System.out.println();
     }
 }
