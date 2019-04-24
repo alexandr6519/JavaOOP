@@ -35,13 +35,13 @@ public class TreeMain {
         System.out.println();
         System.out.println("The  result of method (goAroundInWidth) is : ");
 
-        stringMyTree.goAroundInWidth((node) -> {
+        stringMyTree.goAroundInWidth(node -> {
             System.out.printf("[ %s ]%n", node);
         });
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInDepth) is:");
-        stringMyTree.goAroundInDepth((nodeData) -> {
+        stringMyTree.goAroundInDepth(nodeData -> {
             System.out.printf("[ %s ] %n", nodeData);
         });
         System.out.println();
@@ -55,7 +55,7 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The  result of method (goAroundInDepthUsingRecursion) is : ");
-        stringMyTree.goAroundInDepthUsingRecursion((node) -> {
+        stringMyTree.goAroundInDepthUsingRecursion(node -> {
             System.out.printf("[ %s ]%n", node);
         });
         System.out.println();
@@ -100,7 +100,7 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInDepth) is:");
-        integerMyTree.goAroundInDepth((nodeData) -> {
+        integerMyTree.goAroundInDepth(nodeData -> {
             System.out.printf("[ %s ] %n", nodeData);
         });
         System.out.println();
@@ -128,11 +128,11 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInDepthUsingRecursion) is :");
-        integerMyTree.goAroundInDepthUsingRecursion((nodeData) -> System.out.printf("[ %s ] %n", nodeData));
+        integerMyTree.goAroundInDepthUsingRecursion(nodeData -> System.out.printf("[ %s ] %n", nodeData));
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInWidth) is :");
-        integerMyTree.goAroundInWidth((nodeData) -> System.out.printf(" [ %s ] %n", nodeData));
+        integerMyTree.goAroundInWidth(nodeData -> System.out.printf(" [ %s ] %n", nodeData));
         System.out.println();
     }
 }
