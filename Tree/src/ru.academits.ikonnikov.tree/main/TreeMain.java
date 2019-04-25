@@ -35,15 +35,11 @@ public class TreeMain {
         System.out.println();
         System.out.println("The  result of method (goAroundInWidth) is : ");
 
-        stringMyTree.goAroundInWidth(node -> {
-            System.out.printf("[ %s ]%n", node);
-        });
+        stringMyTree.goAroundInWidth(node -> System.out.printf("[ %s ]%n", node));
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInDepth) is:");
-        stringMyTree.goAroundInDepth(nodeData -> {
-            System.out.printf("[ %s ] %n", nodeData);
-        });
+        stringMyTree.goAroundInDepth(nodeData -> System.out.printf("[ %s ] %n", nodeData));
         System.out.println();
 
         String x = "j";
@@ -55,9 +51,7 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The  result of method (goAroundInDepthUsingRecursion) is : ");
-        stringMyTree.goAroundInDepthUsingRecursion(node -> {
-            System.out.printf("[ %s ]%n", node);
-        });
+        stringMyTree.goAroundInDepthUsingRecursion(node -> System.out.printf("[ %s ]%n", node));
         System.out.println();
 
         Comparator<Integer> comparatorInteger = (item1, item2) -> {
@@ -100,9 +94,7 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The result of using of method (goAroundInDepth) is:");
-        integerMyTree.goAroundInDepth(nodeData -> {
-            System.out.printf("[ %s ] %n", nodeData);
-        });
+        integerMyTree.goAroundInDepth(nodeData -> System.out.printf("[ %s ] %n", nodeData));
         System.out.println();
 
         Integer y = null;
