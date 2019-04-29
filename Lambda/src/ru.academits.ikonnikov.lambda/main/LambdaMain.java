@@ -40,9 +40,8 @@ public class LambdaMain {
         System.out.printf("The list of teens is : %n %s%n", teensList);
 
         if (teensList.size() > 0) {
-            OptionalDouble ageAverage = personsList.stream()
+            OptionalDouble ageAverage = teensList.stream()
                     .mapToDouble(Person::getAge)
-                    .filter(x -> x < 18)
                     .average();
             //noinspection OptionalGetWithoutIsPresent
             System.out.printf("The average of ages of teens is : %.2f %n", ageAverage.getAsDouble());
