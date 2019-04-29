@@ -11,11 +11,11 @@ public class LambdaMain {
         List<Person> personsList = new LinkedList<>();
         personsList.add(new Person("Alexandr", 19));
         personsList.add(new Person("Alexandr", 36));
-        personsList.add(new Person("Anna", 17));
+        personsList.add(new Person("Anna", 37));
         personsList.add(new Person("Anna", 36));
         personsList.add(new Person("Anna", 42));
-        personsList.add(new Person("Boris", 16));
-        personsList.add(new Person("Ivan", 17));
+        personsList.add(new Person("Boris", 36));
+        personsList.add(new Person("Ivan", 37));
         personsList.add(new Person("Ivan", 42));
         personsList.add(new Person("Maxim", 21));
         personsList.add(new Person("Maxim", 48));
@@ -33,10 +33,11 @@ public class LambdaMain {
                 .collect(Collectors.joining(", "));
         System.out.println("The unique names: " + personNamesUnique);
         System.out.println();
-        
-        if (personsList.stream().anyMatch(x -> x.getAge() < 18)) {
-            OptionalDouble ageAverage = personsList.stream()
-                    .filter(x -> x.getAge() < 18)
+
+        Stream<Person> teensStream = personsList.stream().filter(x -> x.getAge() < 18);
+
+        if (teensStream.count() > 0) {
+            OptionalDouble ageAverage = teensStream
                     .mapToDouble(Person::getAge)
                     .average();
             if (ageAverage.isPresent()) {
