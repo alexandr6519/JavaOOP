@@ -33,21 +33,16 @@ public class LambdaMain {
                 .collect(Collectors.joining(", "));
         System.out.println("The unique names: " + personNamesUnique);
         System.out.println();
-
-        List<Person> teensList = personsList.stream()
-                .filter(x -> x.getAge() < 18)
-                .collect(Collectors.toList());
-        System.out.printf("The list of teens is : %n %s%n", teensList);
-
-        if (teensList.size() > 0) {
-            OptionalDouble ageAverage = teensList.stream()
+        
+        if (personsList.stream().anyMatch(x -> x.getAge() < 18)) {
+            OptionalDouble ageAverage = personsList.stream()
+                    .filter(x -> x.getAge() < 18)
                     .mapToDouble(Person::getAge)
                     .average();
-            //noinspection OptionalGetWithoutIsPresent
-            System.out.printf("The average of ages of teens is : %.2f %n", ageAverage.getAsDouble());
-            System.out.println();
-        } else {
-            System.out.println("The personList has not person with age less than 18.");
+            if (ageAverage.isPresent()) {
+                System.out.printf("The average of ages of teens is : %.2f %n", ageAverage.getAsDouble());
+                System.out.println();
+            }
         }
 
         Map<String, Double> map = personsList.stream()
