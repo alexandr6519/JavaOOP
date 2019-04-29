@@ -35,16 +35,15 @@ public class LambdaMain {
         System.out.println();
 
         Stream<Person> teensStream = personsList.stream().filter(x -> x.getAge() < 18);
-
-        if (teensStream.count() > 0) {
-            OptionalDouble ageAverage = teensStream
-                    .mapToDouble(Person::getAge)
-                    .average();
-            if (ageAverage.isPresent()) {
-                System.out.printf("The average of ages of teens is : %.2f %n", ageAverage.getAsDouble());
-                System.out.println();
-            }
+        
+        OptionalDouble ageAverage = teensStream
+                .mapToDouble(Person::getAge)
+                .average();
+        if (ageAverage.isPresent()) {
+            System.out.printf("The average of ages of teens is : %.2f %n", ageAverage.getAsDouble());
+            System.out.println();
         }
+
 
         Map<String, Double> map = personsList.stream()
                 .collect(Collectors.groupingBy(Person::getName, Collectors.averagingInt(Person::getAge)));
