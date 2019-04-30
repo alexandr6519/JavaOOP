@@ -5,41 +5,23 @@ import java.util.function.Consumer;
 
 public class MyGraph {
     private int[][] edges;
-    private int vertexCount;
 
-    public MyGraph() {
-        edges = new int[50][50];
-        this.vertexCount = 0;
+    public MyGraph(int[][] matrix) {
+        edges = Arrays.copyOf(matrix, matrix.length);
     }
 
-    public MyGraph(int vertexCount) {
-        this.vertexCount = vertexCount;
-        edges = new int[vertexCount][vertexCount];
-    }
-
-    public boolean addVertex() {
-        if (vertexCount < edges.length) {
-            vertexCount++;
-            return true;
-        }
-        edges = new int[vertexCount * 2][vertexCount * 2];
-        edges = Arrays.copyOf(this.edges, vertexCount * 2);
-        vertexCount++;
-        return true;
-    }
-
-    public int getVertexCount() {
-        return vertexCount;
+    public int[][] getEdges() {
+        return this.edges;
     }
 
     public LinkedList<Integer> getChildren(int vertexIndex) {
-        if (vertexIndex < 0) {
+        if (vertexIndex < 0 || vertexIndex >= edges.length) {
             return null;
         }
         LinkedList<Integer> children = new LinkedList<>();
 
-        for (int i = 0; i < vertexCount; i++) {
-            if (edges[i][vertexIndex] == 1) {
+        for (int i = 0; i < edges.length; i++) {
+            if (edges[i][vertexIndex] > 0) {
                 children.add(i);
             }
         }
@@ -47,33 +29,50 @@ public class MyGraph {
     }
 
     private LinkedList<Integer> getChildrenBackwards(int vertexIndex) {
-        if (vertexIndex < 0) {
+        if (vertexIndex < 0 || vertexIndex >= edges.length) {
             return null;
         }
         LinkedList<Integer> children = new LinkedList<>();
 
-        for (int i = vertexCount - 1; i >= 0; i--) {
-            if (edges[i][vertexIndex] == 1) {
+        for (int i = edges.length - 1; i >= 0; i--) {
+            if (edges[i][vertexIndex] > 0) {
                 children.add(i);
             }
         }
         return children;
     }
 
-    public int[][] getEdges() {
-        return this.edges;
+    public void goAroundInDepthUsingRecursion(Consumer<Integer> method) {
+        if (edges.length == 0) {
+            return;
+        }
+        boolean [] visited = new boolean[edges.length];
+
+        for (int i = 0; i < edges.length; i++) {
+            if (!visited[i]) {
+                visitVertex(i, method, visited);
+            }
+        }
     }
 
-    public boolean addEdge(int index1, int index2) {
-        if (index1 < 0 || index2 < 0 || index1 >= vertexCount || index2 >= vertexCount || index1 == index2) {
-            throw new IllegalArgumentException("The value of index isn't correct!");
+    private void visitVertex(Integer currentNode, Consumer<Integer> method, boolean [] visited) {
+        if (currentNode == null || visited[currentNode]) {
+            return;
         }
-        edges[index1][index2] = 1;
-        edges[index2][index1] = 1;
-        return true;
+        method.accept(currentNode);
+        visited[currentNode] = true;
+        LinkedList<Integer> children = this.getChildren(currentNode);
+
+        if (children != null) {
+            for (Integer i: children) {
+                visitVertex(i, method, visited);
+            }
+        }
     }
 
     public void goAroundInDepth(Consumer<Integer> method) {
+        int vertexCount = edges.length;
+
         if (vertexCount == 0) {
             return;
         }
@@ -92,13 +91,14 @@ public class MyGraph {
                 currentItem = stack.removeLast();
                 visited[currentItem] = true;
 
-                method.accept(currentItem);
+                method.accept(currentItem );
                 LinkedList<Integer> children = getChildrenBackwards(currentItem);
 
-                assert children != null;
-                for (Integer child : children) {
-                    if (!visited[child] && !stack.contains(child)) {
-                        stack.add(child);
+                if (children != null) {
+                    for (Integer child : children) {
+                        if (!visited[child] && !stack.contains(child)) {
+                            stack.add(child);
+                        }
                     }
                 }
             }
@@ -106,6 +106,8 @@ public class MyGraph {
     }
 
     public void goAroundInWidth(Consumer<Integer> method) {
+        int vertexCount = edges.length;
+
         if (vertexCount == 0) {
             return;
         }
