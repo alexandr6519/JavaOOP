@@ -21,16 +21,6 @@ public class TreeNode<T> {
         return this.getLeft() == null || this.getRight() == null;
     }
 
-    public TreeNode<T>[] getChildren() {
-        //noinspection unchecked
-        return (TreeNode<T>[]) new TreeNode[]{left, right};
-    }
-
-    public TreeNode<T>[] getChildrenBackwards() {
-        //noinspection unchecked
-        return (TreeNode<T>[]) new TreeNode[]{right, left};
-    }
-
     public void setData(T data) {
         this.data = data;
     }
