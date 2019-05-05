@@ -51,7 +51,7 @@ public class TreeMain {
         System.out.println();
 
         System.out.println("The  result of method (goAroundInDepthUsingRecursion) is : ");
-        stringMyTree.goAroundInDepthUsingRecursion(node -> System.out.printf("[ %s ]%n", node));
+        stringMyTree.goAroundInDepthUsingRecursion((node) -> System.out.printf("[ %s ]%n", node));
         System.out.println();
 
         Comparator<Integer> comparatorInteger = (item1, item2) -> {
