@@ -1,7 +1,7 @@
 package ru.academits.ikonnikov.graph;
 
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 public class MyGraph {
     private int[][] edges;
@@ -18,6 +18,7 @@ public class MyGraph {
         if (vertexIndex < 0 || vertexIndex >= edges.length) {
             return null;
         }
+
         LinkedList<Integer> children = new LinkedList<>();
 
         for (int i = 0; i < edges.length; i++) {
@@ -32,6 +33,7 @@ public class MyGraph {
         if (vertexIndex < 0 || vertexIndex >= edges.length) {
             return null;
         }
+
         LinkedList<Integer> children = new LinkedList<>();
 
         for (int i = edges.length - 1; i >= 0; i--) {
@@ -42,10 +44,11 @@ public class MyGraph {
         return children;
     }
 
-    public void goAroundInDepthUsingRecursion(Consumer<Integer> method) {
+    public void goAroundInDepthUsingRecursion(IntConsumer method) {
         if (edges.length == 0) {
             return;
         }
+
         boolean [] visited = new boolean[edges.length];
 
         for (int i = 0; i < edges.length; i++) {
@@ -55,30 +58,30 @@ public class MyGraph {
         }
     }
 
-    private void visitVertex(Integer currentNode, Consumer<Integer> method, boolean [] visited) {
-        if (currentNode == null || visited[currentNode]) {
+    private void visitVertex(int currentNode, IntConsumer method, boolean [] visited) {
+        if (visited[currentNode]) {
             return;
         }
+
         method.accept(currentNode);
         visited[currentNode] = true;
         LinkedList<Integer> children = this.getChildren(currentNode);
 
         if (children != null) {
-            for (Integer i: children) {
+            for (int i: children) {
                 visitVertex(i, method, visited);
             }
         }
     }
 
-    public void goAroundInDepth(Consumer<Integer> method) {
+    public void goAroundInDepth(IntConsumer method) {
         int vertexCount = edges.length;
-
         if (vertexCount == 0) {
             return;
         }
+
         LinkedList<Integer> stack = new LinkedList<>();
         boolean[] visited = new boolean[vertexCount];
-        int currentItem;
 
         for (int i = 0; i < vertexCount; i++) {
             if (visited[i]) {
@@ -88,15 +91,18 @@ public class MyGraph {
             }
 
             while (stack.size() > 0) {
-                currentItem = stack.removeLast();
-                visited[currentItem] = true;
+                int currentItem = stack.removeLast();
+                if (visited[currentItem]) {
+                    continue;
+                }
 
+                visited[currentItem] = true;
                 method.accept(currentItem );
                 LinkedList<Integer> children = getChildrenBackwards(currentItem);
 
                 if (children != null) {
-                    for (Integer child : children) {
-                        if (!visited[child] && !stack.contains(child)) {
+                    for (int child : children) {
+                        if (!visited[child]) {
                             stack.add(child);
                         }
                     }
@@ -105,15 +111,14 @@ public class MyGraph {
         }
     }
 
-    public void goAroundInWidth(Consumer<Integer> method) {
+    public void goAroundInWidth(IntConsumer method) {
         int vertexCount = edges.length;
-
         if (vertexCount == 0) {
             return;
         }
+
         Queue<Integer> queue = new LinkedList<>();
         boolean[] visited = new boolean[vertexCount];
-        int currentItem;
 
         for (int i = 0; i < vertexCount; i++) {
             if (visited[i]) {
@@ -123,14 +128,17 @@ public class MyGraph {
             }
 
             while (queue.size() > 0) {
-                currentItem = queue.remove();
-                visited[currentItem] = true;
+                int currentItem = queue.remove();
+                if (visited[currentItem]) {
+                    continue;
+                }
 
+                visited[currentItem] = true;
                 method.accept(currentItem);
                 LinkedList<Integer> children = getChildren(currentItem);
 
                 for (Integer child : children) {
-                    if (!visited[child] && !queue.contains(child)) {
+                    if (!visited[child]) {
                         queue.add(child);
                     }
                 }
