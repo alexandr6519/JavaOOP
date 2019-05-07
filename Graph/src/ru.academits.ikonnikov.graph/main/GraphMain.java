@@ -36,11 +36,11 @@ public class GraphMain {
         System.out.println("The result of method (goAroundInWidth) is : ");
 
         myGraph.goAroundInWidth(item -> {
-            System.out.printf("The vertex is: [%2s], verticesConnected are : { ", item);
+            System.out.printf("The vertex is: [%2d], verticesConnected are : { ", item);
             LinkedList<Integer> children = myGraph.getChildren(item);
 
-            for (Integer index : children) {
-                System.out.printf("[%s] ", index);
+            for (int index : children) {
+                System.out.printf("[%d] ", index);
             }
             System.out.println("}");
         });
@@ -49,11 +49,11 @@ public class GraphMain {
         System.out.println("The result of method (goAroundInDepth) is : ");
 
         myGraph.goAroundInDepth(item -> {
-            System.out.printf("The vertex is: [%2s], verticesConnected are : { ", item);
+            System.out.printf("The vertex is: [%2d], verticesConnected are : { ", item);
             LinkedList<Integer> children = myGraph.getChildren(item);
 
-            for (Integer index : children) {
-                System.out.printf("[%s] ", index);
+            for (int index : children) {
+                System.out.printf("[%d] ", index);
             }
             System.out.println("}");
         });
@@ -62,11 +62,11 @@ public class GraphMain {
         System.out.println("The result of method (goAroundInDepthUsingRecursion) is : ");
 
         myGraph.goAroundInDepthUsingRecursion(item -> {
-            System.out.printf("The vertex is: [%2s], verticesConnected are : { ", item);
+            System.out.printf("The vertex is: [%2d], verticesConnected are : { ", item);
             LinkedList<Integer> children = myGraph.getChildren(item);
 
-            for (Integer index : children) {
-                System.out.printf("[%s] ", index);
+            for (int index : children) {
+                System.out.printf("[%d] ", index);
             }
             System.out.println("}");
         });
