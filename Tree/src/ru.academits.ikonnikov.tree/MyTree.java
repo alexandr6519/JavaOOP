@@ -5,29 +5,26 @@ import ru.academits.ikonnikov.tree.classes.TreeNode;
 import java.util.*;
 import java.util.function.Consumer;
 
-@SuppressWarnings("deprecation")
 public class MyTree<T> {
     private TreeNode<T> root;
     private int size;
-    private Comparator comparator;
-
-    private Comparator comparatorTree = (item1, item2) -> {
-        if (item1 == null || item2 == null) {
-            if (item1 == null && item2 == null) {
-                return 0;
-            } else if (item1 == null) {
-                return -1;
-            }
-            return 1;
-        }
-        //noinspection unchecked
-        return ((Comparable<T>) item1).compareTo((T) item2);
-    };
+    private Comparator<T> comparator;
 
     public MyTree(T rootData) {
         size = 1;
         root = new TreeNode<>(rootData);
-        comparator = comparatorTree;
+        this.comparator = (item1, item2) -> {
+            if (item1 == null || item2 == null) {
+                if (item1 == null && item2 == null) {
+                    return 0;
+                } else if (item1 == null) {
+                    return -1;
+                }
+                return 1;
+            }
+            //noinspection unchecked
+            return ((Comparable<T>) item1).compareTo(item2);
+        };
     }
 
     public MyTree(T rootData, Comparator<T> comparator) {
@@ -45,7 +42,6 @@ public class MyTree<T> {
     public MyTree() {
         root = null;
         size = 0;
-        comparator = comparatorTree;
     }
 
     public int getSize() {
@@ -65,7 +61,6 @@ public class MyTree<T> {
         TreeNode<T> parentNode = null;
 
         while (currentNode != null) {
-            //noinspection unchecked
             int resultCompareValueAndCurrentNodeData = comparator.compare(value, currentNode.getData());
 
             if (resultCompareValueAndCurrentNodeData == 0) {
@@ -105,7 +100,6 @@ public class MyTree<T> {
         TreeNode<T> currentNode = root;
 
         while (currentNode != null) {
-            //noinspection unchecked
             if (comparator.compare(value, currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     currentNode = currentNode.getLeft();
@@ -129,7 +123,7 @@ public class MyTree<T> {
     private TreeNode<T>[] getMinLeftNodeAndParent(TreeNode<T> node) {
         TreeNode<T> minLeftNode = node.getRight();
         TreeNode<T> minLeftParentNode = node;
-        TreeNode<T> currentMinLeftNode = null;
+        TreeNode<T> currentMinLeftNode;
 
         while (minLeftNode.getLeft() != null) {
             currentMinLeftNode = minLeftNode.getLeft();
@@ -144,11 +138,13 @@ public class MyTree<T> {
         if (size == 0) {
             return false;
         }
+
         TreeNode<T>[] arrayRemoving = getNodeAndParentByValue(value);
 
         if (arrayRemoving == null) {
             return false;
         }
+
         TreeNode<T> removedNode = arrayRemoving[1];
         TreeNode<T> parentRemovedNode = arrayRemoving[0];
 
@@ -166,6 +162,7 @@ public class MyTree<T> {
             size--;
             return true;
         }
+
         //case, when RemovedNode has only one child:
         if (removedNode.hasNotBothChildren()) {
             if (parentRemovedNode != null && parentRemovedNode.getRight() == removedNode) {
@@ -188,25 +185,29 @@ public class MyTree<T> {
             size--;
             return true;
         }
+
         //case, when RemovedNode has both children:
         TreeNode<T>[] arrayMinLeft = getMinLeftNodeAndParent(removedNode);
-        arrayMinLeft[1].setLeft(removedNode.getLeft());
-        arrayMinLeft[0].setLeft(arrayMinLeft[1].getRight());
+        TreeNode<T> minLeftParentNode = arrayMinLeft[0];
+        TreeNode<T> minLeftNode = arrayMinLeft[1];
+        minLeftNode.setLeft(removedNode.getLeft());
+        minLeftParentNode.setLeft(minLeftNode.getRight());
 
         if (parentRemovedNode != null) {
-            if (arrayRemoving[1] == null) {
-                parentRemovedNode.setRight(arrayMinLeft[1]);
+            if (parentRemovedNode.getRight() == removedNode) {
+                parentRemovedNode.setRight(minLeftNode);
             } else {
-                parentRemovedNode.setLeft(arrayMinLeft[1]);
+                parentRemovedNode.setLeft(minLeftNode);
             }
-            if (arrayMinLeft[0] != removedNode) {
-                arrayMinLeft[1].setRight(removedNode.getRight());
+            if (minLeftParentNode != removedNode) {
+                minLeftNode.setRight(removedNode.getRight());
             }
         } else {
-            root = arrayMinLeft[1];
+            root = minLeftNode;
             root.setLeft(removedNode.getLeft());
         }
-        if (arrayMinLeft[0] != removedNode) {
+
+        if (minLeftParentNode != removedNode) {
             root.setRight(removedNode.getRight());
         }
         size--;
