@@ -49,7 +49,7 @@ public class MyGraph {
             return;
         }
 
-        boolean [] visited = new boolean[edges.length];
+        boolean[] visited = new boolean[edges.length];
 
         for (int i = 0; i < edges.length; i++) {
             if (!visited[i]) {
@@ -58,7 +58,7 @@ public class MyGraph {
         }
     }
 
-    private void visitVertex(int currentNode, IntConsumer method, boolean [] visited) {
+    private void visitVertex(int currentNode, IntConsumer method, boolean[] visited) {
         if (visited[currentNode]) {
             return;
         }
@@ -68,7 +68,7 @@ public class MyGraph {
         LinkedList<Integer> children = this.getChildren(currentNode);
 
         if (children != null) {
-            for (int i: children) {
+            for (int i : children) {
                 visitVertex(i, method, visited);
             }
         }
@@ -97,7 +97,7 @@ public class MyGraph {
                 }
 
                 visited[currentItem] = true;
-                method.accept(currentItem );
+                method.accept(currentItem);
                 LinkedList<Integer> children = getChildrenBackwards(currentItem);
 
                 if (children != null) {
