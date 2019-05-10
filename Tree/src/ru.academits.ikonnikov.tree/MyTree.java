@@ -39,11 +39,6 @@ public class MyTree<T> {
         this.comparator = comparator;
     }
 
-    public MyTree() {
-        root = null;
-        size = 0;
-    }
-
     public int getSize() {
         return this.size;
     }
@@ -57,6 +52,7 @@ public class MyTree<T> {
         if (size == 0) {
             throw new IllegalArgumentException("This tree is empty!");
         }
+
         TreeNode<T> currentNode = root;
         TreeNode<T> parentNode = null;
 
@@ -208,7 +204,7 @@ public class MyTree<T> {
         }
 
         if (minLeftParentNode != removedNode) {
-            root.setRight(removedNode.getRight());
+            minLeftNode.setRight(removedNode.getRight());
         }
         size--;
         return true;
@@ -218,6 +214,7 @@ public class MyTree<T> {
         if (root == null) {
             return;
         }
+
         Queue<TreeNode<T>> queue = new LinkedList<>();
         queue.add(root);
 
@@ -245,6 +242,7 @@ public class MyTree<T> {
         if (currentNode == null) {
             return;
         }
+
         method.accept(currentNode.getData());
 
         if (currentNode.getLeft() != null) {
@@ -259,6 +257,7 @@ public class MyTree<T> {
         if (root == null) {
             return;
         }
+
         LinkedList<TreeNode<T>> stack = new LinkedList<>();
         stack.add(root);
 
