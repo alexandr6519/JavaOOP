@@ -44,7 +44,6 @@ public class MyTree<T> {
     public MyTree() {
         root = null;
         size = 0;
-        this.comparator = comparatorTree;
     }
 
     public int getSize() {
