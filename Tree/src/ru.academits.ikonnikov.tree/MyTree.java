@@ -13,21 +13,23 @@ public class MyTree<T> {
     public MyTree(T rootData) {
         size = 1;
         root = new TreeNode<>(rootData);
-        this.comparator = comparatorTree;
+        comparator = createComparator();
     }
 
-    private Comparator<T> comparatorTree = (item1, item2) -> {
-        if (item1 == null || item2 == null) {
-            if (item1 == null && item2 == null) {
-                return 0;
-            } else if (item1 == null) {
-                return -1;
+    private Comparator<T> createComparator() {
+        return (item1, item2) -> {
+            if (item1 == null || item2 == null) {
+                if (item1 == null && item2 == null) {
+                    return 0;
+                } else if (item1 == null) {
+                    return -1;
+                }
+                return 1;
             }
-            return 1;
-        }
-        //noinspection unchecked
-        return ((Comparable<T>) item1).compareTo(item2);
-    };
+            //noinspection unchecked
+            return ((Comparable<T>) item1).compareTo(item2);
+        };
+    }
 
     public MyTree(T rootData, Comparator<T> comparator) {
         size = 1;
@@ -44,6 +46,7 @@ public class MyTree<T> {
     public MyTree() {
         root = null;
         size = 0;
+        comparator = createComparator();
     }
 
     public int getSize() {
