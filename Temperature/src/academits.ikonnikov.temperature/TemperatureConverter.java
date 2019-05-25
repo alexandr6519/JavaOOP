@@ -18,7 +18,7 @@ public class TemperatureConverter {
 
     private static void run() {
         createGui.createPanelInput();
-        createGui.buttonInput.addActionListener(e1 -> {
+        createGui.buttonInput.addActionListener(e -> {
             String text = createGui.field1.getText();
 
             if (!isNumeric(text)) {
