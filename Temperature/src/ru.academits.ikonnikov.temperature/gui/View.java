@@ -131,8 +131,7 @@ public class View {
             } else {
                 inputTemperature = Double.parseDouble(text);
                 int initialScale = chooseInitialScale();
-                buttonInput.setEnabled(false);
-
+              
                 while (initialScale == -1) {
                     int resultDialog = toExit();
 
@@ -227,7 +226,8 @@ public class View {
                         }
                         break;
                 }
-
+                
+                buttonInput.setEnabled(false);
                 double outputTemperature = model.outputTemperature(inputTemperature, initialScale, scaleToConvert);
                 String messageOutput = (String.format("The result of conversion value (%.2f) %s is : (%.2f) ", inputTemperature, messageConvert, outputTemperature));
                 displayOutputMessage(messageOutput);
