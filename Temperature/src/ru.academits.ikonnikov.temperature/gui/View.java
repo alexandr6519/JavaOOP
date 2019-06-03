@@ -87,9 +87,6 @@ public class View {
         frame.setVisible(bool);
     }
 
-    private int toExit() {
-        return JOptionPane.showConfirmDialog(frame, "Are you sure to exit?", "Opportunity to exit", JOptionPane.YES_NO_OPTION);
-    }
 
     private int chooseInitialScale() {
         Object[] options = {"Celsius", "Fahrenheit", "Kelvin"};
@@ -121,6 +118,33 @@ public class View {
         JOptionPane.showMessageDialog(panel, messageError);
     }
 
+    private int toExit() {
+        return JOptionPane.showConfirmDialog(frame, "Are you sure to exit?", "Opportunity to exit", JOptionPane.YES_NO_OPTION);
+    }
+
+    private int chanceToExit(String scale) {
+        int scaleToConvert = -1;
+
+        if (scale.equals("initial")) {
+            scaleToConvert = chooseInitialScale();
+        } else {
+            scaleToConvert = chooseScaleToConvert(scale);
+        }
+
+        while (scaleToConvert == -1) {
+            int resultDialog = toExit();
+
+            if (resultDialog == 0) {
+                System.exit(0);
+            } else if (scale.equals("initial")) {
+                scaleToConvert = chooseInitialScale();
+            } else {
+                scaleToConvert = chooseScaleToConvert(scale);
+            }
+        }
+        return scaleToConvert;
+    }
+
     public void run() {
         buttonInput.addActionListener(e -> {
             String text = field1.getText();
@@ -130,17 +154,7 @@ public class View {
                 displayError("You need to enter number!");
             } else {
                 inputTemperature = Double.parseDouble(text);
-                int initialScale = chooseInitialScale();
-              
-                while (initialScale == -1) {
-                    int resultDialog = toExit();
-
-                    if (resultDialog == 0) {
-                        System.exit(0);
-                    } else {
-                        initialScale = chooseInitialScale();
-                    }
-                }
+                int initialScale = chanceToExit("initial");
 
                 String messageConvert = "";
                 String messageError = "The value of temperature of this scale isn't correct!";
@@ -149,17 +163,7 @@ public class View {
                 switch (initialScale) {
                     case 0:
                         if (inputTemperature >= -273.15) {
-                            scaleToConvert = chooseScaleToConvert("Celsius");
-
-                            while (scaleToConvert == -1) {
-                                int resultDialog = toExit();
-
-                                if (resultDialog == 0) {
-                                    System.exit(0);
-                                } else {
-                                    scaleToConvert = chooseScaleToConvert("Celsius");
-                                }
-                            }
+                            scaleToConvert = chanceToExit("Celsius");
 
                             if (scaleToConvert == 0) {
                                 field3.setText("Fahrenheit");
@@ -175,17 +179,7 @@ public class View {
                         break;
                     case 1:
                         if (inputTemperature >= -459.67) {
-                            scaleToConvert = chooseScaleToConvert("Fahrenheit");
-
-                            while (scaleToConvert == -1) {
-                                int resultDialog = toExit();
-
-                                if (resultDialog == 0) {
-                                    System.exit(0);
-                                } else {
-                                    scaleToConvert = chooseScaleToConvert("Fahrenheit");
-                                }
-                            }
+                            scaleToConvert = chanceToExit("Fahrenheit");
 
                             if (scaleToConvert == 0) {
                                 field3.setText("Celsius");
@@ -201,17 +195,7 @@ public class View {
                         break;
                     case 2:
                         if (inputTemperature >= 0) {
-                            scaleToConvert = chooseScaleToConvert("Kelvin");
-
-                            while (scaleToConvert == -1) {
-                                int resultDialog = toExit();
-
-                                if (resultDialog == 0) {
-                                    System.exit(0);
-                                } else {
-                                    scaleToConvert = chooseScaleToConvert("Kelvin");
-                                }
-                            }
+                            scaleToConvert = chanceToExit("Kelvin");
 
                             if (scaleToConvert == 0) {
                                 field3.setText("Celsius");
@@ -226,7 +210,6 @@ public class View {
                         }
                         break;
                 }
-                
                 buttonInput.setEnabled(false);
                 double outputTemperature = model.outputTemperature(inputTemperature, initialScale, scaleToConvert);
                 String messageOutput = (String.format("The result of conversion value (%.2f) %s is : (%.2f) ", inputTemperature, messageConvert, outputTemperature));
@@ -236,10 +219,10 @@ public class View {
     }
 
     private void displayOutputMessage(String messageOutput) {
-        buttonConvert.addActionListener(e2 ->{
-                buttonInput.setEnabled(true);
-                JOptionPane.showMessageDialog(frame, messageOutput);
-    });
+        buttonConvert.addActionListener(e2 -> {
+            buttonInput.setEnabled(true);
+            JOptionPane.showMessageDialog(frame, messageOutput);
+        });
     }
 
     private static boolean isNumeric(String stringNumber) {
