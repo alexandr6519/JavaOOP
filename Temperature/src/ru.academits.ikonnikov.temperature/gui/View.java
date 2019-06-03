@@ -123,7 +123,7 @@ public class View {
     }
 
     private int chanceToExit(String scale) {
-        int scaleToConvert = -1;
+        int scaleToConvert;
 
         if (scale.equals("initial")) {
             scaleToConvert = chooseInitialScale();
