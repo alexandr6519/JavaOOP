@@ -16,6 +16,8 @@ public class View {
     private double inputTemperature;
     private Model model;
     private Scales scales;
+    private ButtonGroup buttonGroupScales;
+    private ButtonGroup buttonGroupScalesToConvert;
 
     public View() {
         model = new Model();
@@ -57,7 +59,7 @@ public class View {
         gbl.setConstraints(label2, c);
         panel.add(label2);
 
-        ButtonGroup buttonGroupScales = new ButtonGroup();
+        buttonGroupScales = new ButtonGroup();
         JRadioButton[] radioButtons = new JRadioButton[scalesSet.length];
 
         for (int i = 0; i < scalesCount - 1; i++) {
@@ -79,7 +81,7 @@ public class View {
         gbl.setConstraints(label3, c);
         panel.add(label3);
 
-        ButtonGroup buttonGroupScalesToConvert = new ButtonGroup();
+        buttonGroupScalesToConvert = new ButtonGroup();
         JRadioButton[] buttonsToConvert = new JRadioButton[scalesSet.length];
 
         for (int i = 0; i < scalesCount - 1; i++) {
@@ -105,18 +107,12 @@ public class View {
         gbl.setConstraints(buttonConvert, c);
         panel.add(buttonConvert);
 
-        buttonConvert.addActionListener(e -> {
+        //buttonConvert.addActionListener(e -> {
             for (int i = 0; i < scalesSet.length; i++) {
-                if (radioButtons[i].isSelected()) {
-                    scales.setScaleInitial(i);
-                    field2.setText(scalesSet[i]);
-                }
-                if (buttonsToConvert[i].isSelected()) {
-                    scales.setScaleToConvert(i);
-                    field3.setText(scalesSet[i]);
-                }
+                radioButtons[i].setActionCommand(scalesSet[i]);
+                buttonsToConvert[i].setActionCommand(scalesSet[i]);
             }
-        });
+        //});
     }
 
     public void setVisible(boolean bool) {
@@ -130,12 +126,13 @@ public class View {
     public void run() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch ( Exception e ) {
-            e.printStackTrace();
+        } catch ( Exception ex ) {
+            ex.printStackTrace();
         }
 
         SwingUtilities.invokeLater(() -> {
             buttonConvert.addActionListener(e -> {
+
                 String text = field1.getText();
 
                 if (!isNumeric(text)) {
@@ -143,14 +140,16 @@ public class View {
                     displayError("You need to enter number!");
                 } else {
                     inputTemperature = Double.parseDouble(text);
-                    int initialScale = scales.getScaleInitial();
 
-                    int scaleToConvert = scales.getScaleToConvert();
+                    String initialScale = buttonGroupScales.getSelection().getActionCommand();
+                    String scaleToConvert = buttonGroupScalesToConvert.getSelection().getActionCommand();
 
                     if (!model.wasConvertTemperature(inputTemperature, initialScale, scaleToConvert)) {
                         displayError("The value of temperature of this scale isn't correct!");
                     } else {
                         double outputTemperature = model.getOutputTemperature();
+                        field2.setText(initialScale);
+                        field3.setText(scaleToConvert);
                         displayOutputMessage(outputTemperature);
                     }
                 }
