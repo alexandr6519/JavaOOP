@@ -15,13 +15,12 @@ public class View {
     private JPanel panel = new JPanel();
     private double inputTemperature;
     private Model model;
-    private Scales scales;
     private ButtonGroup buttonGroupScales;
     private ButtonGroup buttonGroupScalesToConvert;
 
     public View() {
         model = new Model();
-        scales = new Scales();
+        Scales scales = new Scales();
         String[] scalesSet = scales.getScales();
         int scalesCount = scalesSet.length;
         frame.setSize(700, 250);
@@ -60,7 +59,7 @@ public class View {
         panel.add(label2);
 
         buttonGroupScales = new ButtonGroup();
-        JRadioButton[] radioButtons = new JRadioButton[scalesSet.length];
+        JRadioButton[] radioButtons = new JRadioButton[scalesCount];
 
         for (int i = 0; i < scalesCount - 1; i++) {
             radioButtons[i] = new JRadioButton(scalesSet[i]);
@@ -107,12 +106,10 @@ public class View {
         gbl.setConstraints(buttonConvert, c);
         panel.add(buttonConvert);
 
-        //buttonConvert.addActionListener(e -> {
             for (int i = 0; i < scalesSet.length; i++) {
                 radioButtons[i].setActionCommand(scalesSet[i]);
                 buttonsToConvert[i].setActionCommand(scalesSet[i]);
             }
-        //});
     }
 
     public void setVisible(boolean bool) {
@@ -158,10 +155,9 @@ public class View {
     }
 
     private void displayOutputMessage(double outputTemperature) {
-        frame.setVisible(false);
         JFrame frameOutput = new JFrame(" Temperature converter (Output form)");
         frameOutput.setSize(700, 300);
-        frameOutput.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameOutput.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frameOutput.setLocation(420, 200);
         GridBagLayout gbl = new GridBagLayout();
         frameOutput.setLayout(gbl);
