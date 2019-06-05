@@ -1,28 +1,61 @@
 package ru.academits.ikonnikov.temperature;
 
 public class Model {
-    public double outputTemperature(double inputTemperature, int scaleInitial, int scaleToConvert) {
+    private double outputTemperature;
+
+    public double getOutputTemperature() {
+        return outputTemperature;
+    }
+
+    private void setOutputTemperature(double outputTemperature) {
+        this.outputTemperature = outputTemperature;
+    }
+
+    public boolean wasConvertTemperature(double inputTemperature, int scaleInitial, int scaleToConvert) {
         switch (scaleInitial) {
             case 0:
-                if (scaleToConvert == 0) {
-                    return inputTemperature * 9 / 5 + 32;
-                } else if (scaleToConvert == 1) {
-                    return inputTemperature + 273.15;
+                if (inputTemperature < -273.15) {
+                    return false;
                 }
+
+                if (scaleToConvert == 1) {
+                    setOutputTemperature(inputTemperature * 9 / 5 + 32);
+                } else if (scaleToConvert == 2) {
+                    setOutputTemperature(inputTemperature + 273.15);
+                } else if (scaleToConvert == 0) {
+                    setOutputTemperature(inputTemperature);
+                }
+                return true;
             case 1:
-                if (scaleToConvert == 0) {
-                    return (inputTemperature - 32) * 5 / 9;
-                } else if (scaleToConvert == 1) {
-                    return (inputTemperature - 32) * 5 / 9 + 273.15;
+                if (inputTemperature < -459.67) {
+                    return false;
                 }
+
+                if (scaleToConvert == 0) {
+                    setOutputTemperature((inputTemperature - 32) * 5 / 9);
+                } else if (scaleToConvert == 2) {
+                    setOutputTemperature((inputTemperature - 32) * 5 / 9 + 273.15);
+                } else if (scaleToConvert == 1) {
+                    setOutputTemperature(inputTemperature);
+                }
+                return true;
             case 2:
-                if (scaleToConvert == 0) {
-                    return inputTemperature - 273.15;
-                } else if (scaleToConvert == 1) {
-                    return (inputTemperature - 273.15) * 9 / 5 + 32;
+                if (inputTemperature < 0) {
+                    return false;
                 }
+
+                if (scaleToConvert == 0) {
+                    setOutputTemperature(inputTemperature - 273.15);
+                } else if (scaleToConvert == 1) {
+                    setOutputTemperature((inputTemperature - 273.15) * 9 / 5 + 32);
+                } else if (scaleToConvert == 2) {
+                    setOutputTemperature(inputTemperature);
+                }
+                return true;
             default:
-                return 0;
+                return false;
         }
     }
+
+
 }
