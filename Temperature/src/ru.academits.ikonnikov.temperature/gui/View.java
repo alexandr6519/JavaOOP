@@ -11,21 +11,22 @@ public class View {
     private JTextField field3 = new JTextField(10);
     private JTextField field4 = new JTextField(10);
     private JButton buttonConvert = new JButton("OK");
-    private JFrame frame = new JFrame(" Temperature converter (Input form)");
+    private JFrame frame = new JFrame(" Temperature converter");
     private JPanel panel = new JPanel();
     private double inputTemperature;
     private Model model;
     private ButtonGroup buttonGroupScales;
     private ButtonGroup buttonGroupScalesToConvert;
+    private Scales scales;
 
     public View() {
         model = new Model();
-        Scales scales = new Scales();
+        scales = new Scales();
         String[] scalesSet = scales.getScales();
         int scalesCount = scalesSet.length;
         frame.setSize(700, 250);
+        frame.setLocation(350, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(320, 250);
         frame.setResizable(false);
 
         frame.add(panel);
@@ -50,6 +51,7 @@ public class View {
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         gbl.setConstraints(field1, c);
+        field1.setEditable(true);
         panel.add(field1);
 
         c.gridwidth = 1;
@@ -106,10 +108,10 @@ public class View {
         gbl.setConstraints(buttonConvert, c);
         panel.add(buttonConvert);
 
-            for (int i = 0; i < scalesSet.length; i++) {
-                radioButtons[i].setActionCommand(scalesSet[i]);
-                buttonsToConvert[i].setActionCommand(scalesSet[i]);
-            }
+        for (int i = 0; i < scalesSet.length; i++) {
+            radioButtons[i].setActionCommand(scalesSet[i]);
+            buttonsToConvert[i].setActionCommand(scalesSet[i]);
+        }
     }
 
     public void setVisible(boolean bool) {
@@ -129,7 +131,6 @@ public class View {
 
         SwingUtilities.invokeLater(() -> {
             buttonConvert.addActionListener(e -> {
-
                 String text = field1.getText();
 
                 if (!isNumeric(text)) {
@@ -138,15 +139,15 @@ public class View {
                 } else {
                     inputTemperature = Double.parseDouble(text);
 
-                    String initialScale = buttonGroupScales.getSelection().getActionCommand();
-                    String scaleToConvert = buttonGroupScalesToConvert.getSelection().getActionCommand();
+                    String stringInitialScale = buttonGroupScales.getSelection().getActionCommand();
+                    String stringScaleToConvert = buttonGroupScalesToConvert.getSelection().getActionCommand();
 
-                    if (!model.wasConvertTemperature(inputTemperature, initialScale, scaleToConvert)) {
+                    if (!model.wasConvertTemperature(inputTemperature, scales.getScaleIndex(stringInitialScale), scales.getScaleIndex(stringScaleToConvert))) {
                         displayError("The value of temperature of this scale isn't correct!");
                     } else {
                         double outputTemperature = model.getOutputTemperature();
-                        field2.setText(initialScale);
-                        field3.setText(scaleToConvert);
+                        field2.setText(stringInitialScale);
+                        field3.setText(stringScaleToConvert);
                         displayOutputMessage(outputTemperature);
                     }
                 }
@@ -155,12 +156,9 @@ public class View {
     }
 
     private void displayOutputMessage(double outputTemperature) {
-        JFrame frameOutput = new JFrame(" Temperature converter (Output form)");
-        frameOutput.setSize(700, 300);
-        frameOutput.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frameOutput.setLocation(420, 200);
+        panel.setVisible(false);
         GridBagLayout gbl = new GridBagLayout();
-        frameOutput.setLayout(gbl);
+        frame.setLayout(gbl);
         GridBagConstraints c = new GridBagConstraints();
 
         c.anchor = GridBagConstraints.CENTER;
@@ -174,47 +172,45 @@ public class View {
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        JLabel label1 = new JLabel("Value of inputTemperature:");
-        gbl.setConstraints(label1, c);
-        frameOutput.add(label1);
+        JLabel label5 = new JLabel("Value of inputTemperature:");
+        gbl.setConstraints(label5, c);
+        frame.add(label5);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         gbl.setConstraints(field1, c);
         field1.setEditable(false);
-        frameOutput.add(field1);
+        frame.add(field1);
 
         c.gridwidth = 1;
-        JLabel label2 = new JLabel("You choose initial scale : ");
-        gbl.setConstraints(label2, c);
-        frameOutput.add(label2);
+        JLabel label6 = new JLabel("You choose initial scale : ");
+        gbl.setConstraints(label6, c);
+        frame.add(label6);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         gbl.setConstraints(field2, c);
         field2.setEditable(false);
-        frameOutput.add(field2);
+        frame.add(field2);
 
         c.gridwidth = 1;
-        JLabel label3 = new JLabel("You choose scale to convert: ");
-        gbl.setConstraints(label3, c);
-        frameOutput.add(label3);
+        JLabel label7 = new JLabel("You choose scale to convert: ");
+        gbl.setConstraints(label7, c);
+        frame.add(label7);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         gbl.setConstraints(field3, c);
         field3.setEditable(false);
-        frameOutput.add(field3);
+        frame.add(field3);
 
         c.gridwidth = 1;
-        JLabel label4 = new JLabel("The result of conversion is : ");
-        gbl.setConstraints(label4, c);
-        frameOutput.add(label4);
+        JLabel label8 = new JLabel("The result of conversion is : ");
+        gbl.setConstraints(label8, c);
+        frame.add(label8);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         gbl.setConstraints(field4, c);
         field4.setEditable(false);
-        field4.setText(Double.toString(outputTemperature));
-        frameOutput.add(field4);
-
-        frameOutput.setVisible(true);
+        field4.setText(String.format("%.2f", outputTemperature));
+        frame.add(field4);
     }
 
     private static boolean isNumeric(String stringNumber) {
