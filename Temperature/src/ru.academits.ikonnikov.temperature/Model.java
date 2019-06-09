@@ -11,55 +11,55 @@ public class Model {
         this.outputTemperature = outputTemperature;
     }
 
-    public boolean wasConvertTemperature(double inputTemperature, String scaleInitial, String scaleToConvert) {
+    public boolean wasConvertTemperature(double inputTemperature, int scaleInitial, int scaleToConvert) {
         switch (scaleInitial) {
-            case "Celsius":
+            case 0:
                 if (inputTemperature < -273.15) {
                     return false;
                 }
 
                 switch (scaleToConvert) {
-                    case "Fahrenheit":
+                    case 0:
+                        setOutputTemperature(inputTemperature);
+                        break;
+                    case 1:
                         setOutputTemperature(inputTemperature * 9 / 5 + 32);
                         break;
-                    case "Kelvin":
+                    case 2:
                         setOutputTemperature(inputTemperature + 273.15);
-                        break;
-                    case "Celsius":
-                        setOutputTemperature(inputTemperature);
                         break;
                 }
                 return true;
-            case "Fahrenheit":
+            case 1:
                 if (inputTemperature < -459.67) {
                     return false;
                 }
 
                 switch (scaleToConvert) {
-                    case "Celsius":
+                    case 0:
                         setOutputTemperature((inputTemperature - 32) * 5 / 9);
                         break;
-                    case "Kelvin":
-                        setOutputTemperature((inputTemperature - 32) * 5 / 9 + 273.15);
-                        break;
-                    case "Fahrenheit":
+                    case 1:
                         setOutputTemperature(inputTemperature);
+                        break;
+                    case 2:
+                        setOutputTemperature((inputTemperature - 32) * 5 / 9 + 273.15);
                         break;
                 }
                 return true;
-            case "Kelvin":
+            case 2:
                 if (inputTemperature < 0) {
                     return false;
                 }
 
                 switch (scaleToConvert) {
-                    case "Celsius":
+                    case 0:
                         setOutputTemperature(inputTemperature - 273.15);
                         break;
-                    case "Fahrenheit":
+                    case 1:
                         setOutputTemperature((inputTemperature - 273.15) * 9 / 5 + 32);
                         break;
-                    case "Kelvin":
+                    case 2:
                         setOutputTemperature(inputTemperature);
                         break;
                 }
