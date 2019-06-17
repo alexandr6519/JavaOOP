@@ -37,10 +37,10 @@ public class Scales {
                         outputTemperature = inputTemperature;
                         break;
                     case 1:
-                        outputTemperature =  inputTemperature * 9 / 5 + 32;
+                        outputTemperature = inputTemperature * 9 / 5 + 32;
                         break;
                     case 2:
-                        outputTemperature =  inputTemperature + 273.15;
+                        outputTemperature = inputTemperature + 273.15;
                         break;
                 }
                 return true;
@@ -51,13 +51,13 @@ public class Scales {
 
                 switch (scaleToConvert) {
                     case 0:
-                        outputTemperature =  (inputTemperature - 32) * 5 / 9;
+                        outputTemperature = (inputTemperature - 32) * 5 / 9;
                         break;
                     case 1:
-                        outputTemperature =  inputTemperature;
+                        outputTemperature = inputTemperature;
                         break;
                     case 2:
-                        outputTemperature =  (inputTemperature - 32) * 5 / 9 + 273.15;
+                        outputTemperature = (inputTemperature - 32) * 5 / 9 + 273.15;
                         break;
                 }
                 return true;
@@ -68,18 +68,17 @@ public class Scales {
 
                 switch (scaleToConvert) {
                     case 0:
-                        outputTemperature =  inputTemperature - 273.15;
+                        outputTemperature = inputTemperature - 273.15;
                         break;
                     case 1:
-                        outputTemperature =  (inputTemperature - 273.15) * 9 / 5 + 32;
+                        outputTemperature = (inputTemperature - 273.15) * 9 / 5 + 32;
                         break;
                     case 2:
-                        outputTemperature =  inputTemperature;
+                        outputTemperature = inputTemperature;
                         break;
                 }
                 return true;
         }
         return false;
     }
-
 }
