@@ -8,24 +8,22 @@ import java.awt.*;
 public class View {
     private JTextField field1 = new JTextField(10);
     private JTextField field2 = new JTextField(10);
-    private JTextField field3 = new JTextField(10);
-    private JTextField field4 = new JTextField(10);
     private JButton buttonConvert = new JButton("OK");
     private JFrame frame = new JFrame(" Temperature converter");
     private JPanel panel = new JPanel();
     private double inputTemperature;
-    private Model model;
     private ButtonGroup buttonGroupScales;
     private ButtonGroup buttonGroupScalesToConvert;
+    private Model model;
     private Scales scales;
 
-    public View() {
-        model = new Model();
-        scales = new Scales();
+    public View(Scales scales) {
+        this.scales = scales;
+        model = new Model(scales);
         String[] scalesSet = scales.getScales();
         int scalesCount = scalesSet.length;
-        frame.setSize(700, 250);
-        frame.setLocation(350, 250);
+        frame.setSize(700, 350);
+        frame.setLocation(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
@@ -40,7 +38,7 @@ public class View {
         c.gridwidth = 1;
         c.gridx = GridBagConstraints.RELATIVE;
         c.gridy = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(20, 0, 0, 0);
+        c.insets = new Insets(10, 0, 0, 0);
         c.ipadx = 0;
         c.ipady = 0;
         c.weightx = 0.0;
@@ -112,6 +110,17 @@ public class View {
             radioButtons[i].setActionCommand(scalesSet[i]);
             buttonsToConvert[i].setActionCommand(scalesSet[i]);
         }
+
+        c.gridwidth = 1;
+        JLabel label5 = new JLabel("The result of conversion is : ");
+        gbl.setConstraints(label5, c);
+        panel.add(label5);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gbl.setConstraints(field2, c);
+        field2.setEditable(false);
+
+        panel.add(field2);
     }
 
     public void setVisible(boolean bool) {
@@ -143,74 +152,16 @@ public class View {
                     String stringScaleToConvert = buttonGroupScalesToConvert.getSelection().getActionCommand();
 
                     if (!model.wasConvertTemperature(inputTemperature, scales.getScaleIndex(stringInitialScale), scales.getScaleIndex(stringScaleToConvert))) {
+                        field1.setText("");
+                        field2.setText("");
                         displayError("The value of temperature of this scale isn't correct!");
                     } else {
                         double outputTemperature = model.getOutputTemperature();
-                        field2.setText(stringInitialScale);
-                        field3.setText(stringScaleToConvert);
-                        displayOutputMessage(outputTemperature);
+                        field2.setText(String.format("%.2f", outputTemperature));
                     }
                 }
             });
         });
-    }
-
-    private void displayOutputMessage(double outputTemperature) {
-        panel.setVisible(false);
-        GridBagLayout gbl = new GridBagLayout();
-        frame.setLayout(gbl);
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.NONE;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.gridx = GridBagConstraints.RELATIVE;
-        c.gridy = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(20, 10, 0, 0);
-        c.ipadx = 0;
-        c.ipady = 0;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        JLabel label5 = new JLabel("Value of inputTemperature:");
-        gbl.setConstraints(label5, c);
-        frame.add(label5);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gbl.setConstraints(field1, c);
-        field1.setEditable(false);
-        frame.add(field1);
-
-        c.gridwidth = 1;
-        JLabel label6 = new JLabel("You choose initial scale : ");
-        gbl.setConstraints(label6, c);
-        frame.add(label6);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gbl.setConstraints(field2, c);
-        field2.setEditable(false);
-        frame.add(field2);
-
-        c.gridwidth = 1;
-        JLabel label7 = new JLabel("You choose scale to convert: ");
-        gbl.setConstraints(label7, c);
-        frame.add(label7);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gbl.setConstraints(field3, c);
-        field3.setEditable(false);
-        frame.add(field3);
-
-        c.gridwidth = 1;
-        JLabel label8 = new JLabel("The result of conversion is : ");
-        gbl.setConstraints(label8, c);
-        frame.add(label8);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gbl.setConstraints(field4, c);
-        field4.setEditable(false);
-        field4.setText(String.format("%.2f", outputTemperature));
-        frame.add(field4);
     }
 
     private static boolean isNumeric(String stringNumber) {
