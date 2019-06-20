@@ -8,8 +8,6 @@ import java.awt.*;
 public class View {
     private JTextField field1 = new JTextField(10);
     private JTextField field2 = new JTextField(10);
-    private JTextField field3 = new JTextField(10);
-    private JTextField field4 = new JTextField(10);
     private JButton buttonConvert = new JButton("OK");
     private JFrame frame = new JFrame(" Temperature converter");
     private JPanel panel = new JPanel();
@@ -100,8 +98,6 @@ public class View {
         gbl.setConstraints(buttonsToConvert[scalesCount - 1], c);
         panel.add(buttonsToConvert[scalesCount - 1]);
 
-
-
         c.gridwidth = 1;
         c.insets = new Insets(10, 10, 0, 0);
         JLabel label4 = new JLabel("Click button to convert ");
@@ -116,28 +112,6 @@ public class View {
             radioButtons[i].setActionCommand(scalesSet[i]);
             buttonsToConvert[i].setActionCommand(scalesSet[i]);
         }
-
-        c.gridwidth = 1;
-        c.insets = new Insets(10, 10, 0, 10);
-        JLabel label6 = new JLabel("Your initial scale is: ");
-        gbl.setConstraints(label6, c);
-        panel.add(label6);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        field3.setEditable(false);
-        gbl.setConstraints(field3, c);
-        panel.add(field3);
-
-        c.gridwidth = 1;
-        c.insets = new Insets(10, 10, 0, 10);
-        JLabel label7 = new JLabel("Your scale to convert is: ");
-        gbl.setConstraints(label7, c);
-        panel.add(label7);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        field4.setEditable(false);
-        gbl.setConstraints(field4, c);
-        panel.add(field4);
 
         c.gridwidth = 1;
         JLabel label5 = new JLabel("The result of conversion is : ");
@@ -182,14 +156,10 @@ public class View {
                     if (!model.wasConvertTemperature(inputTemperature, scales.getScaleIndex(stringInitialScale), scales.getScaleIndex(stringScaleToConvert))) {
                         field1.setText("");
                         field2.setText("");
-                        field3.setText("");
-                        field4.setText("");
                         displayError("The value of temperature of this scale isn't correct!");
                     } else {
                         double outputTemperature = model.getOutputTemperature();
                         field2.setText(String.format("%.2f", outputTemperature));
-                        field3.setText(stringInitialScale);
-                        field4.setText(stringScaleToConvert);
                     }
                 }
             });
