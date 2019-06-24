@@ -18,8 +18,13 @@ public class View {
 
     public View(Scales[] scales) {
         model = new Model(scales);
-        String[] scalesSet = scales[0].scalesSet;
-        int scalesCount = scalesSet.length;
+        int scalesCount = scales.length;
+        String[] scalesSet = new String[scalesCount];
+
+        for (int i = 0; i < scalesCount; i++){
+            scalesSet[i] = scales[i].getScaleName();
+        }
+
         frame.setSize(700, 350);
         frame.setLocation(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
