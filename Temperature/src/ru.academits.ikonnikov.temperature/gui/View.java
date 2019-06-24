@@ -1,6 +1,6 @@
 package ru.academits.ikonnikov.temperature.gui;
 
-import ru.academits.ikonnikov.temperature.Model;
+import ru.academits.ikonnikov.temperature.classes.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,12 +15,10 @@ public class View {
     private ButtonGroup buttonGroupScales;
     private ButtonGroup buttonGroupScalesToConvert;
     private Model model;
-    private Scales scales;
 
-    public View(Scales scales) {
-        this.scales = scales;
+    public View(Scales[] scales) {
         model = new Model(scales);
-        String[] scalesSet = scales.getScales();
+        String[] scalesSet = scales[0].scalesSet;
         int scalesCount = scalesSet.length;
         frame.setSize(700, 350);
         frame.setLocation(350, 200);
@@ -73,8 +71,6 @@ public class View {
         c.gridwidth = GridBagConstraints.REMAINDER;
         gbl.setConstraints(radioButtons[scalesCount - 1], c);
         panel.add(radioButtons[scalesCount - 1]);
-
-
 
         c.gridwidth = 1;
         c.insets = new Insets(10, 10, 0, 10);
@@ -153,13 +149,16 @@ public class View {
                     String stringInitialScale = buttonGroupScales.getSelection().getActionCommand();
                     String stringScaleToConvert = buttonGroupScalesToConvert.getSelection().getActionCommand();
 
-                    if (!model.wasConvertTemperature(inputTemperature, scales.getScaleIndex(stringInitialScale), scales.getScaleIndex(stringScaleToConvert))) {
+                    int scaleInitial = model.getScaleIndex(stringInitialScale);
+                    int scaleToConvert = model.getScaleIndex(stringScaleToConvert);
+
+                    if (model.wasConvertTemperature(inputTemperature, scaleInitial, scaleToConvert)) {
+                        double outputTemperature = model.getOutputTemperature();
+                        field2.setText(String.format("%.2f", outputTemperature));
+                    } else {
                         field1.setText("");
                         field2.setText("");
                         displayError("The value of temperature of this scale isn't correct!");
-                    } else {
-                        double outputTemperature = model.getOutputTemperature();
-                        field2.setText(String.format("%.2f", outputTemperature));
                     }
                 }
             });
